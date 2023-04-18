@@ -33,6 +33,15 @@ function CartItem({ item: { product, checked } }: TCartItem) {
         <AmountHandler amount={amount} onIncrement={handleIncrement} onDecrement={handleDecrement} />
         {/* TODO: 수량에 맞춰 계산하기 */}
         <span className="cart-price">{totalPrice.toLocaleString()}원</span>
+        <div className="number-input-container">
+          <input type="number" className="number-input" value="1" />
+          <div>
+            <button className="number-input-button">▲</button>
+            <button className="number-input-button">▼</button>
+          </div>
+        </div>
+        {/* TODO: 수량에 맞춰 계산하기 */}
+        <span className="cart-price">{product.price}원</span>
       </div>
     </div>
   );
