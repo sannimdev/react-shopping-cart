@@ -1,12 +1,26 @@
-import React from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { ICartItem } from "../../types/types";
 import deleteSvg from "../../assets/svgs/trash.svg";
+import AmountHandler from "./AmountHandler";
 
 type TCartItem = {
   item: ICartItem;
 };
 
 function CartItem({ item: { product, checked } }: TCartItem) {
+  const [amount, setAmount] = useState(1);
+  const totalPrice = useMemo(() => product.price * amount, [amount]);
+
+  const handleIncrement = useCallback(() => {
+    setAmount((amount) => amount + 1);
+  }, [amount]);
+
+  const handleDecrement = useCallback(() => {
+    if (amount <= 0) return;
+
+    setAmount((amount) => amount - 1);
+  }, [amount]);
+
   return (
     <div className="cart-container">
       <div className="flex gap-15 mt-10">
@@ -16,15 +30,9 @@ function CartItem({ item: { product, checked } }: TCartItem) {
       </div>
       <div className="flex-col-center justify-end gap-15">
         <img className="cart-trash-svg" src={deleteSvg} alt="삭제" />
-        <div className="number-input-container">
-          <input type="number" className="number-input" value="1" />
-          <div>
-            <button className="number-input-button">▲</button>
-            <button className="number-input-button">▼</button>
-          </div>
-        </div>
+        <AmountHandler amount={amount} onIncrement={handleIncrement} onDecrement={handleDecrement} />
         {/* TODO: 수량에 맞춰 계산하기 */}
-        <span className="cart-price">{product.price}원</span>
+        <span className="cart-price">{totalPrice.toLocaleString()}원</span>
       </div>
     </div>
   );
