@@ -1,15 +1,12 @@
 import React from "react";
 import { Header } from "./components";
-import { ProductList } from "./components/Product";
 
-//TODO: 지우기
-import { sampleProducts } from "./tododelete/sampledb";
-
-function App() {
+function App({ children }: { children: React.ReactNode }) {
   return (
     <div className="App">
       <Header />
-      <ProductList products={sampleProducts} />
+      {children}
+      {/* <footer>&copy; Corp 2023 Nextstep</footer> */}
     </div>
   );
 }
