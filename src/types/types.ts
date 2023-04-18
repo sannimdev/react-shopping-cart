@@ -1,5 +1,5 @@
 export interface IProduct {
-  id: number;
+  id?: number;
   name: string;
   price: number;
   imageUrl: string;
@@ -8,4 +8,5 @@ export interface IProduct {
 export interface ICartItem {
   id: number;
   product: IProduct;
+  checked?: boolean;
 }
