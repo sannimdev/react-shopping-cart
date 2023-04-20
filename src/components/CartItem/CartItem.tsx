@@ -1,32 +1,44 @@
-import React, { useCallback, useMemo, useState } from "react";
-import { ICartItem } from "../../types/types";
+import React, { useCallback, useMemo } from "react";
+import { IProduct } from "../../types/types";
 import deleteSvg from "../../assets/svgs/trash.svg";
 import AmountHandler from "./AmountHandler";
+import { useCartContext } from "../../context/CartContext";
 
-type TCartItem = {
-  item: ICartItem;
+type TCartItemProps = {
+  product: IProduct;
 };
 
-function CartItem({ item: { product, checked } }: TCartItem) {
-  const [amount, setAmount] = useState(1);
-  const totalPrice = useMemo(() => product.price * amount, [amount]);
+function CartItem({ product }: TCartItemProps) {
+  const { updateProductInCart } = useCartContext();
+  const { name, imageUrl, price, checked, amount = 1 } = product;
+  const totalPrice = useMemo(() => price * amount, [amount]);
 
   const handleIncrement = useCallback(() => {
-    setAmount((amount) => amount + 1);
-  }, [amount]);
+    updateProductInCart({ ...product, amount: amount + 1 });
+  }, [product]);
 
   const handleDecrement = useCallback(() => {
     if (amount <= 0) return;
 
-    setAmount((amount) => amount - 1);
-  }, [amount]);
+    updateProductInCart({ ...product, amount: amount - 1 });
+  }, [product]);
+
+  const handleToggleChecked = useCallback(() => {
+    updateProductInCart({ ...product, checked: !checked });
+  }, [product]);
 
   return (
     <div className="cart-container">
       <div className="flex gap-15 mt-10">
-        <input className="checkbox" name="checkbox" type="checkbox" checked={checked} />
-        <img className="w-144 h-144" src={product.imageUrl} alt="PET보틀-정사각(420ml)" />
-        <span className="cart-name">{product.name}</span>
+        <input
+          type="checkbox"
+          name="checkbox"
+          className="checkbox"
+          checked={!!checked}
+          onChange={handleToggleChecked}
+        />
+        <img className="w-144 h-144" src={imageUrl} alt={name} />
+        <span className="cart-name">{name}</span>
       </div>
       <div className="flex-col-center justify-end gap-15">
         <img className="cart-trash-svg" src={deleteSvg} alt="삭제" />
