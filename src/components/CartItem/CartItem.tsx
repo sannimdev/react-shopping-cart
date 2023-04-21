@@ -10,23 +10,32 @@ type TCartItemProps = {
 
 function CartItem({ product }: TCartItemProps) {
   const {
-    cartDataHandlers: { updateProduct },
+    cartDataHandlers: { updateProduct, removeProduct },
   } = useCartContext();
   const { name, imageUrl, price, checked, amount = 1 } = product;
   const totalPrice = useMemo(() => price * amount, [amount]);
+
+  const handleToggleChecked = useCallback(() => {
+    updateProduct({ ...product, checked: !checked });
+  }, [product]);
+
+  const handleRemovingProduct = useCallback(() => {
+    if (!confirm("장바구니에서 삭제하시겠습니까?")) return;
+
+    removeProduct(product);
+  }, [product]);
 
   const handleIncrement = useCallback(() => {
     updateProduct({ ...product, amount: amount + 1 });
   }, [product]);
 
   const handleDecrement = useCallback(() => {
-    if (amount <= 0) return;
+    if (amount - 1 === 0) {
+      handleRemovingProduct();
+      return;
+    }
 
     updateProduct({ ...product, amount: amount - 1 });
-  }, [product]);
-
-  const handleToggleChecked = useCallback(() => {
-    updateProduct({ ...product, checked: !checked });
   }, [product]);
 
   return (
@@ -43,7 +52,7 @@ function CartItem({ product }: TCartItemProps) {
         <span className="cart-name">{name}</span>
       </div>
       <div className="flex-col-center justify-end gap-15">
-        <img className="cart-trash-svg" src={deleteSvg} alt="삭제" />
+        <img className="cart-trash-svg" src={deleteSvg} alt="삭제" onClick={handleRemovingProduct} />
         <AmountHandler amount={amount} onIncrement={handleIncrement} onDecrement={handleDecrement} />
         <span className="cart-price">{totalPrice.toLocaleString()}원</span>
       </div>
