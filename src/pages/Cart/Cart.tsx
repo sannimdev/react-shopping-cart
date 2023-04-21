@@ -1,13 +1,17 @@
 import React, { useCallback, useMemo } from "react";
-import { useCartContext } from "../../context/CartContext";
+import { useCartContext } from "../../context/CartContext/CartContext";
 import { CartItem } from "../../components/CartItem";
 
 function Cart() {
-  const { cart, estimatedPrice, updateProductsInCart } = useCartContext();
+  const {
+    cart,
+    estimatedPrice,
+    cartDataHandlers: { updateProducts },
+  } = useCartContext();
 
   const allChecked = useMemo(() => cart.products.every(({ checked }) => !!checked), [cart]);
   const handleAllCheck = useCallback(() => {
-    updateProductsInCart(cart.products.map((product) => ({ ...product, checked: !allChecked })));
+    updateProducts(cart.products.map((product) => ({ ...product, checked: !allChecked })));
   }, [cart]);
 
   return (

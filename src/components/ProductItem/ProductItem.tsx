@@ -1,7 +1,7 @@
 import React from "react";
 import cartIcon from "../../assets/svgs/cart.svg";
 import { IProduct } from "../../types/types";
-import { useCartContext } from "../../context/CartContext";
+import { useCartContext } from "../../context/CartContext/CartContext";
 
 type TProductItem = {
   product: IProduct;
@@ -9,14 +9,14 @@ type TProductItem = {
 
 function ProductItem({ product }: TProductItem) {
   const { name, price, imageUrl } = product;
-  const { updateProductInCart } = useCartContext();
+  const { cartDataHandlers } = useCartContext();
 
   const handleAddingCartItem = (product: IProduct) => {
     if (!confirm(`${name}을 장바구니에 담으시겠습니까?`)) {
       return;
     }
 
-    updateProductInCart?.({ ...product, checked: true });
+    cartDataHandlers?.updateProduct?.({ ...product, checked: true });
   };
 
   return (

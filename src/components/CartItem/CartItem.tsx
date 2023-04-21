@@ -2,29 +2,31 @@ import React, { useCallback, useMemo } from "react";
 import { IProduct } from "../../types/types";
 import deleteSvg from "../../assets/svgs/trash.svg";
 import AmountHandler from "./AmountHandler";
-import { useCartContext } from "../../context/CartContext";
+import { useCartContext } from "../../context/CartContext/CartContext";
 
 type TCartItemProps = {
   product: IProduct;
 };
 
 function CartItem({ product }: TCartItemProps) {
-  const { updateProductInCart } = useCartContext();
+  const {
+    cartDataHandlers: { updateProduct },
+  } = useCartContext();
   const { name, imageUrl, price, checked, amount = 1 } = product;
   const totalPrice = useMemo(() => price * amount, [amount]);
 
   const handleIncrement = useCallback(() => {
-    updateProductInCart({ ...product, amount: amount + 1 });
+    updateProduct({ ...product, amount: amount + 1 });
   }, [product]);
 
   const handleDecrement = useCallback(() => {
     if (amount <= 0) return;
 
-    updateProductInCart({ ...product, amount: amount - 1 });
+    updateProduct({ ...product, amount: amount - 1 });
   }, [product]);
 
   const handleToggleChecked = useCallback(() => {
-    updateProductInCart({ ...product, checked: !checked });
+    updateProduct({ ...product, checked: !checked });
   }, [product]);
 
   return (
