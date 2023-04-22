@@ -9,6 +9,7 @@ function Cart() {
     cartDataHandlers: { updateProducts },
   } = useCartContext();
 
+  const checkedItems = useMemo(() => cart.products.filter(({ checked }) => checked), [cart]);
   const allChecked = useMemo(() => cart.products.every(({ checked }) => !!checked), [cart]);
   const handleAllCheck = useCallback(() => {
     updateProducts(cart.products.map((product) => ({ ...product, checked: !allChecked })));
@@ -62,7 +63,7 @@ function Cart() {
               <span className="highlight-text">{estimatedPrice.toLocaleString()}원</span>
             </div>
             <div className="flex-center mt-30 mx-10">
-              <button className="primary-button flex-center">주문하기(3개)</button>
+              <button className="primary-button flex-center">주문하기({checkedItems.length}개)</button>
             </div>
           </div>
         </section>

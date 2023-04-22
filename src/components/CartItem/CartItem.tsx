@@ -10,6 +10,7 @@ type TCartItemProps = {
 
 function CartItem({ product }: TCartItemProps) {
   const {
+    cart,
     cartDataHandlers: { updateProduct, removeProduct },
   } = useCartContext();
   const { name, imageUrl, price, checked, amount = 1 } = product;
@@ -17,7 +18,7 @@ function CartItem({ product }: TCartItemProps) {
 
   const handleToggleChecked = useCallback(() => {
     updateProduct({ ...product, checked: !checked });
-  }, [product]);
+  }, [cart, product]);
 
   const handleRemovingProduct = useCallback(() => {
     if (!confirm("장바구니에서 삭제하시겠습니까?")) return;
