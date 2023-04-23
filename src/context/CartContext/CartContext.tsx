@@ -1,7 +1,7 @@
-import React, { useContext, useMemo } from "react";
-import { createContext } from "react";
-import { ICart } from "../../types/types";
-import useCartDataHandlers, { TCartDataHandlers } from "./hooks/useCartDataHandlers";
+import React, { useContext, useMemo } from 'react';
+import { createContext } from 'react';
+import { ICart } from '../../types/types';
+import useCartDataHandlers, { TCartDataHandlers } from './hooks/useCartDataHandlers';
 
 const CartContext = createContext<ICart | null>(null);
 const CartDataHandlingContext = createContext<TCartDataHandlers | null>(null);
@@ -21,8 +21,11 @@ export function useCartContext() {
   const cartDataHandlers = useContext(CartDataHandlingContext);
 
   if (cart === null || cartDataHandlers === null) {
-    throw new Error("장바구니와 관련된 설정을 코드에서 초기화하지 않았습니다.");
+    throw new Error('장바구니와 관련된 설정을 코드에서 초기화하지 않았습니다.');
   }
+
+  const checkedProducts = useMemo(() => cart.products.filter(({ checked }) => checked), [cart]);
+  const allChecked = useMemo(() => cart.products.every(({ checked }) => !!checked), [cart]);
 
   const estimatedPrice = useMemo(
     () =>
@@ -30,5 +33,5 @@ export function useCartContext() {
     [cart]
   );
 
-  return { cart, cartDataHandlers, estimatedPrice };
+  return { cart, cartDataHandlers, checkedProducts, allChecked, estimatedPrice };
 }

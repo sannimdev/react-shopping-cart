@@ -1,25 +1,25 @@
-import React, { useCallback, useMemo } from "react";
-import { useCartContext } from "../../context/CartContext/CartContext";
-import { CartItem } from "../../components/CartItem";
+import React, { useCallback } from 'react';
+import { useCartContext } from '../../context/CartContext/CartContext';
+import { CartItem } from '../../components/CartItem';
 
 function Cart() {
   const {
     cart,
     estimatedPrice,
+    checkedProducts,
+    allChecked,
     cartDataHandlers: { updateProducts, removeProducts },
   } = useCartContext();
-
-  const checkedItems = useMemo(() => cart.products.filter(({ checked }) => checked), [cart]);
-  const allChecked = useMemo(() => cart.products.every(({ checked }) => !!checked), [cart]);
 
   const handleAllCheck = useCallback(() => {
     updateProducts(cart.products.map((product) => ({ ...product, checked: !allChecked })));
   }, [cart]);
 
   const handleDeletingChecked = useCallback(() => {
-    if (!confirm(`정말 선택하신 ${checkedItems.length}개의 상품을 삭제하시겠습니까?`)) return;
+    if (checkedProducts.length === 0) return;
+    if (!confirm(`정말 선택하신 ${checkedProducts.length}개의 상품을 삭제하시겠습니까?`)) return;
 
-    removeProducts(checkedItems);
+    removeProducts(checkedProducts);
   }, [cart]);
 
   return (
@@ -72,7 +72,7 @@ function Cart() {
               <span className="highlight-text">{estimatedPrice.toLocaleString()}원</span>
             </div>
             <div className="flex-center mt-30 mx-10">
-              <button className="primary-button flex-center">주문하기({checkedItems.length}개)</button>
+              <button className="primary-button flex-center">주문하기({checkedProducts.length}개)</button>
             </div>
           </div>
         </section>

@@ -1,8 +1,8 @@
-import React, { useCallback, useMemo } from "react";
-import { IProduct } from "../../types/types";
-import deleteSvg from "../../assets/svgs/trash.svg";
-import AmountHandler from "./AmountHandler";
-import { useCartContext } from "../../context/CartContext/CartContext";
+import React, { useCallback, useMemo } from 'react';
+import { IProduct } from '../../types/types';
+import deleteSvg from '../../assets/svgs/trash.svg';
+import AmountHandler from './AmountHandler';
+import { useCartContext } from '../../context/CartContext/CartContext';
 
 type TCartItemProps = {
   product: IProduct;
@@ -18,26 +18,23 @@ function CartItem({ product }: TCartItemProps) {
 
   const handleToggleChecked = useCallback(() => {
     updateProduct({ ...product, checked: !checked });
-  }, [cart, product]);
+  }, [cart]);
 
   const handleRemovingProduct = useCallback(() => {
-    if (!confirm("장바구니에서 삭제하시겠습니까?")) return;
+    if (!confirm('장바구니에서 선택한 상품을 삭제하시겠습니까?')) return;
 
     removeProduct(product);
-  }, [product]);
+  }, [cart]);
 
   const handleIncrement = useCallback(() => {
     updateProduct({ ...product, amount: amount + 1 });
-  }, [product]);
+  }, [cart]);
 
   const handleDecrement = useCallback(() => {
-    if (amount - 1 === 0) {
-      handleRemovingProduct();
-      return;
-    }
+    if (amount - 1 === 0) return;
 
     updateProduct({ ...product, amount: amount - 1 });
-  }, [product]);
+  }, [cart]);
 
   return (
     <div className="cart-container">
