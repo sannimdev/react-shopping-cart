@@ -1,7 +1,7 @@
-import React, { useContext, useMemo } from 'react';
+import React, { PropsWithChildren, useContext, useMemo } from 'react';
 import { createContext } from 'react';
-import { ICart } from '../../domain/shopping-cart/types';
 import useCartDataHandlers, { TCartDataHandlers } from './hooks/useCartDataHandlers';
+import { ICart } from '../../domain/shopping-cart/types';
 import { CART } from '../../domain/shopping-cart/constants';
 
 const {
@@ -11,7 +11,7 @@ const {
 const CartContext = createContext<ICart | null>(null);
 const CartDataHandlingContext = createContext<TCartDataHandlers | null>(null);
 
-export function CartContextProvider({ children }: { children: React.ReactNode }) {
+export function CartContextProvider({ children }: PropsWithChildren) {
   const { cart, cartDataHandlers } = useCartDataHandlers();
 
   return (

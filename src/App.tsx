@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { PropsWithChildren } from 'react';
 import { Header } from './components';
 import { CartContextProvider } from './context/CartContext/CartContext';
 
-function App({ children }: { children: React.ReactNode }) {
+function App({ children }: PropsWithChildren) {
   return (
     <CartContextProvider>
       <div className="App">

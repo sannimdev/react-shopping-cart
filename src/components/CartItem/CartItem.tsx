@@ -1,8 +1,8 @@
 import React from 'react';
-import { IProduct } from '../../domain/shopping-cart/types';
 import deleteSvg from '../../assets/svgs/trash.svg';
 import AmountHandler from './AmountHandler';
 import useCartItem from './hooks/useCartItem';
+import { IProduct } from '../../domain/shopping-cart/types';
 import { CART } from '../../domain/shopping-cart/constants';
 
 type TCartItemProps = {

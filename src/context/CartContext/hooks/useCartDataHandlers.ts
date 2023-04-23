@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { ICart, IProduct } from '../../../domain/shopping-cart/types';
 import { CART } from '../../../domain/shopping-cart/constants';
 
@@ -7,11 +7,11 @@ const CART_INITIAL_VALUE = { products: [] };
 export type TCartDataHandlers = {
   insertProducts: (products: IProduct[]) => void;
   updateProducts: (products: IProduct[]) => void;
-  removeProducts: (products: IProduct[]) => void;
+  deleteProducts: (products: IProduct[]) => void;
 
   insertProduct: (product: IProduct) => void;
   updateProduct: (product: IProduct) => void;
-  removeProduct: (product: IProduct) => void;
+  deleteProduct: (product: IProduct) => void;
 };
 
 type THookCartDataHandlers = () => {
@@ -74,7 +74,7 @@ const useCartDataHandlers: THookCartDataHandlers = () => {
     });
   };
 
-  const removeProducts = (products: IProduct[]) => {
+  const deleteProducts = (products: IProduct[]) => {
     const { products: oldProducts } = cart;
     const ids = products.map(({ id }) => id);
 
@@ -86,16 +86,16 @@ const useCartDataHandlers: THookCartDataHandlers = () => {
 
   const insertProduct = (product: IProduct) => insertProducts([product]);
   const updateProduct = (product: IProduct) => updateProducts([product]);
-  const removeProduct = (product: IProduct) => removeProducts([product]);
+  const deleteProduct = (product: IProduct) => deleteProducts([product]);
 
   const cartDataHandlers = {
     insertProducts,
     updateProducts,
-    removeProducts,
+    deleteProducts,
 
     insertProduct,
     updateProduct,
-    removeProduct,
+    deleteProduct,
   };
 
   return { cart, cartDataHandlers };

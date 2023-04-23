@@ -10,7 +10,7 @@ const {
 const useCartItem = (product: IProduct) => {
   const {
     cart,
-    cartDataHandlers: { updateProduct, removeProduct },
+    cartDataHandlers: { updateProduct, deleteProduct },
   } = useCartContext();
   const { price, checked, amount = 1 } = product;
 
@@ -23,7 +23,7 @@ const useCartItem = (product: IProduct) => {
   const handleRemovingProduct = useCallback(() => {
     if (!confirm('장바구니에서 선택한 상품을 삭제하시겠습니까?')) return;
 
-    removeProduct(product);
+    deleteProduct(product);
   }, [cart]);
 
   const handleIncrement = useCallback(() => {
