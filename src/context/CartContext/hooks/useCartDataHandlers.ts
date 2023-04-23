@@ -15,22 +15,37 @@ type THookCartDataHandlers = () => {
   cartDataHandlers: TCartDataHandlers;
 };
 
+const sortProducts = (products: IProduct[]) => products.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
 const useCartDataHandlers: THookCartDataHandlers = () => {
   const [cart, setCart] = useState<ICart>(CART_INITIAL_VALUE);
 
-  const updateProduct = (product: IProduct) => {
+  const updateProducts = (newProducts: IProduct[]) => {
+    const { products: oldProducts } = cart;
     const currentTime = new Date().getTime();
-    const oldProduct = cart.products.find(({ id }) => id === product.id);
+    const newProductIds = newProducts.map(({ id }) => id);
+
     const products = [
-      ...cart.products.filter(({ id }) => id !== product.id),
-      {
-        ...product,
-        createdAt: oldProduct?.createdAt || currentTime,
-        updatedAt: oldProduct?.updatedAt || currentTime,
-      },
+      ...newProducts.map((product) => {
+        const oldProduct = oldProducts.find(({ id }) => id === product.id);
+        if (oldProduct) {
+          return {
+            ...product,
+            amount: (oldProduct?.amount || 0) + 1,
+            updatedAt: currentTime,
+          };
+        }
+        return {
+          ...product,
+          amount: 1,
+          createdAt: currentTime,
+          updatedAt: currentTime,
+        };
+      }),
+      ...oldProducts.filter(({ id }) => !newProductIds.includes(id)),
     ];
 
-    products.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+    sortProducts(products);
 
     setCart({
       ...cart,
@@ -38,19 +53,23 @@ const useCartDataHandlers: THookCartDataHandlers = () => {
     });
   };
 
-  const updateProducts = (products: IProduct[]) =>
-    products.forEach((product) => {
-      updateProduct(product);
-    });
-
-  const removeProduct = (product: IProduct) => {
-    setCart((cart) => ({
-      ...cart,
-      products: cart.products.filter(({ id }) => id !== product.id),
-    }));
+  const updateProduct = (product: IProduct) => {
+    updateProducts([product]);
   };
 
-  const removeProducts = (products: IProduct[]) => products.forEach((product) => removeProduct(product));
+  const removeProducts = (products: IProduct[]) => {
+    const { products: oldProducts } = cart;
+    const ids = products.map(({ id }) => id);
+
+    setCart({
+      ...cart,
+      products: oldProducts.filter(({ id }) => !ids.includes(id)),
+    });
+  };
+
+  const removeProduct = (product: IProduct) => {
+    removeProducts([product]);
+  };
 
   const cartDataHandlers = {
     updateProduct,

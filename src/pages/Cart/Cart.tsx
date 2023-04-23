@@ -6,13 +6,20 @@ function Cart() {
   const {
     cart,
     estimatedPrice,
-    cartDataHandlers: { updateProducts },
+    cartDataHandlers: { updateProducts, removeProducts },
   } = useCartContext();
 
   const checkedItems = useMemo(() => cart.products.filter(({ checked }) => checked), [cart]);
   const allChecked = useMemo(() => cart.products.every(({ checked }) => !!checked), [cart]);
+
   const handleAllCheck = useCallback(() => {
     updateProducts(cart.products.map((product) => ({ ...product, checked: !allChecked })));
+  }, [cart]);
+
+  const handleDeletingChecked = useCallback(() => {
+    if (!confirm(`정말 선택하신 ${checkedItems.length}개의 상품을 삭제하시겠습니까?`)) return;
+
+    removeProducts(checkedItems);
   }, [cart]);
 
   return (
@@ -37,7 +44,9 @@ function Cart() {
                 선택해제
               </label>
             </div>
-            <button className="delete-button">상품삭제</button>
+            <button className="delete-button" onClick={handleDeletingChecked}>
+              상품삭제
+            </button>
           </div>
           {cart.products.length > 0 && (
             <>
