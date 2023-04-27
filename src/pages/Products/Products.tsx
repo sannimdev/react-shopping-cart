@@ -1,20 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { ProductItem } from '../../components/ProductItem';
-import { IProduct, IProductResponse } from '../../domain/shopping-cart/types';
+import React, { useState } from "react";
+import { ProductItem } from "../../components/ProductItem";
+import { IProduct } from "../../domain/shopping-cart/types";
+import useProducts from "./hooks/useProducts";
 
 function Products() {
   const [products, setProducts] = useState<IProduct[]>([]);
 
-  useEffect(() => {
-    const loadProducts = async () => {
-      const response = await fetch('/api/products');
-      const json = (await response.json()) as IProductResponse;
-
-      setProducts(json.products);
-    };
-
-    loadProducts();
-  }, []);
+  useProducts({ setProducts });
 
   return (
     <section className="product-container">
