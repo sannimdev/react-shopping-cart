@@ -1,13 +1,29 @@
 import React from "react";
 import { CartItem } from "../../components/CartItem";
 import useCart from "./hooks/useCart";
+import { EstimatePrice } from "../../components/EstimatePrice";
+import { useCheckoutContext } from "../../context/CheckoutContext/CheckoutContext";
+import { useNavigate } from "react-router-dom";
 
 function Cart() {
+  const navigate = useNavigate();
+
   const {
     cart,
-    values: { productCount, allChecked, estimatedPrice, checkedCount, nobodyChecked, orderButtonClass },
-    handlers: { handleAllCheck, handleDeletingChecked, handleOrder },
+    cartDataHandlers: { deleteProducts },
+    values: { productCount, allChecked, checkedCount, checkedProducts },
+    handlers: { handleAllCheck, handleDeletingChecked },
   } = useCart();
+
+  const { setProducts: setCheckoutProducts } = useCheckoutContext();
+
+  const handleCheckingOut = () => {
+    if (!confirm("선택하신 상품을 주문하시겠습니까?")) return;
+
+    setCheckoutProducts([...checkedProducts]);
+    deleteProducts(checkedProducts);
+    navigate("/checkout");
+  };
 
   return (
     <section className="cart-section">
@@ -18,25 +34,25 @@ function Cart() {
 
       <div className="flex">
         <section className="cart-left-section">
-          <div className="flex justify-between items-center">
-            <div className="checkbox-container">
-              <input
-                className="checkbox"
-                name="checkbox"
-                type="checkbox"
-                checked={allChecked}
-                onChange={handleAllCheck}
-              />
-              <label className="checkbox-label" htmlFor="checkbox">
-                선택해제
-              </label>
-            </div>
-            <button className="delete-button" onClick={handleDeletingChecked}>
-              상품삭제
-            </button>
-          </div>
           {productCount > 0 && (
             <>
+              <div className="flex justify-between items-center">
+                <div className="checkbox-container">
+                  <input
+                    className="checkbox"
+                    name="checkbox"
+                    type="checkbox"
+                    checked={allChecked}
+                    onChange={handleAllCheck}
+                  />
+                  <label className="checkbox-label" htmlFor="checkbox">
+                    선택해제
+                  </label>
+                </div>
+                <button className="delete-button" onClick={handleDeletingChecked}>
+                  상품삭제
+                </button>
+              </div>
               <h3 className="cart-title">든든배송 상품({checkedCount}개)</h3>
               <hr className="divide-line-gray mt-10" />
               {cart.products.map((product, idx) => (
@@ -49,21 +65,7 @@ function Cart() {
           )}
         </section>
         <section className="cart-right-section">
-          <div className="cart-right-section__top">
-            <h3 className="cart-title">결제예상금액</h3>
-          </div>
-          <hr className="divide-line-thin" />
-          <div className="cart-right-section__bottom">
-            <div className="flex justify-between p-20 mt-20">
-              <span className="highlight-text">결제예상금액</span>
-              <span className="highlight-text">{estimatedPrice.toLocaleString()}원</span>
-            </div>
-            <div className="flex-center mt-30 mx-10">
-              <button className={orderButtonClass} onClick={handleOrder} disabled={nobodyChecked}>
-                주문하기({checkedCount}개)
-              </button>
-            </div>
-          </div>
+          <EstimatePrice products={cart.products} onClick={handleCheckingOut} />
         </section>
       </div>
     </section>

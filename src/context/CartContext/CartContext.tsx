@@ -1,12 +1,8 @@
-import React, { PropsWithChildren, useContext, useMemo } from "react";
+import React, { PropsWithChildren, useContext } from "react";
 import { createContext } from "react";
 import useCartDataHandlers, { TCartDataHandlers } from "./hooks/useCartDataHandlers";
 import { ICart } from "../../domain/shopping-cart/types";
-import { CART } from "../../domain/shopping-cart/constants";
-
-const {
-  PRODUCTS: { DEFAULT_INITIAL_AMOUNT },
-} = CART;
+import useProducts from "../../domain/shopping-cart/hooks/useProducts";
 
 const CartContext = createContext<ICart | null>(null);
 const CartDataHandlingContext = createContext<TCartDataHandlers | null>(null);
@@ -29,24 +25,9 @@ export function useCartContext() {
     throw new Error("장바구니와 관련된 설정을 코드에서 초기화하지 않았습니다.");
   }
 
-  const productCount = useMemo(() => cart.products.length, [cart]);
-  const checkedProducts = useMemo(() => cart.products.filter(({ checked }) => checked), [cart]);
-  const checkedCount = useMemo(() => checkedProducts.length, [cart]);
-  const allChecked = useMemo(() => cart.products.every(({ checked }) => !!checked), [cart]);
-  const nobodyChecked = useMemo(() => checkedCount === 0, [cart]);
-
-  const estimatedPrice = useMemo(
-    () =>
-      cart.products.reduce(
-        (result, { checked, price, amount = DEFAULT_INITIAL_AMOUNT }) => (checked ? result + price * amount : result),
-        0
-      ),
-    [cart]
-  );
-
   return {
     cart,
-    values: { productCount, checkedProducts, checkedCount, allChecked, nobodyChecked, estimatedPrice },
+    values: useProducts(cart.products),
     cartDataHandlers,
   };
 }

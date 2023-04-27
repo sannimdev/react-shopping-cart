@@ -2,12 +2,10 @@ import { useCallback, useMemo } from "react";
 import { useCartContext } from "../../../context/CartContext";
 
 const useCart = () => {
-  const {
-    cart,
-    values,
-    cartDataHandlers: { updateProducts, deleteProducts },
-  } = useCartContext();
+  const { cart, cartDataHandlers, values } = useCartContext();
+
   const { checkedCount, checkedProducts, allChecked } = values;
+  const { updateProducts, deleteProducts } = cartDataHandlers;
 
   const orderButtonClass = useMemo(() => {
     const classes = ["button", "flex-center"];
@@ -33,6 +31,7 @@ const useCart = () => {
 
   return {
     cart,
+    cartDataHandlers,
     values: { ...values, orderButtonClass },
     handlers: { handleAllCheck, handleDeletingChecked, handleOrder },
   };

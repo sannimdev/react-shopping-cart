@@ -1,5 +1,5 @@
-import { rest } from 'msw';
-import db from './db';
+import { rest } from "msw";
+import db from "./db/db";
 
 const {
   products,
@@ -7,7 +7,7 @@ const {
   // carts
 } = db;
 
-const API_PREFIX = '/api';
+const API_PREFIX = "/api";
 const APIS = {
   products,
   orders,
