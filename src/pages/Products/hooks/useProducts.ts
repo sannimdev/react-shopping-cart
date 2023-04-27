@@ -1,23 +1,19 @@
-import { useEffect } from "react";
-import { IProduct, IProductResponse } from "../../../domain/shopping-cart/types";
-import { API_URL } from "../../../domain/shopping-cart/constants";
-import fetcher from "../../../utils/fetcher";
+import { IProduct } from "../../../domain/shopping-cart/types";
+import { useQuery } from "react-query";
+import { getProducts } from "../../../apis/products";
 
 type THookProductsProps = {
-  setProducts: React.Dispatch<React.SetStateAction<IProduct[]>>;
+  // setProducts: React.Dispatch<React.SetStateAction<IProduct[]>>;
 };
 
-const useProducts = ({ setProducts }: THookProductsProps) => {
-  useEffect(() => {
-    const loadProducts = async () => {
-      const response = (await fetcher.get(API_URL.PRODUCTS)) as IProductResponse;
-      setProducts(response.products);
-    };
+const useProducts = (props: THookProductsProps) => {
+  // const queryClient = useQueryClient();
 
-    loadProducts();
-  }, []);
+  const query = useQuery("products", getProducts);
 
-  return null;
+  const products = query.data?.products;
+
+  return { products };
 };
 
 export default useProducts;

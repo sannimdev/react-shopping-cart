@@ -8,8 +8,3 @@ export const CART = {
     AMOUNT_UNIT: 1,
   },
 };
-
-export const API_URL = {
-  PRODUCTS: "/api/products",
-  ORDERS: "/api/orders",
-};
