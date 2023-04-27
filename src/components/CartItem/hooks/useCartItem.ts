@@ -1,10 +1,10 @@
-import { useCallback, useMemo } from 'react';
-import { useCartContext } from '../../../context/CartContext';
-import { IProduct } from '../../../domain/shopping-cart/types';
-import { CART } from '../../../domain/shopping-cart/constants';
+import { useCallback, useMemo } from "react";
+import { useCartContext } from "../../../context/CartContext";
+import { IProduct } from "../../../domain/shopping-cart/types";
+import { CART } from "../../../domain/shopping-cart/constants";
 
 const {
-  PRODUCTS: { AMOUNT_UNIT },
+  PRODUCTS: { AMOUNT_UNIT, MAX_AMOUNT, MIN_AMOUNT },
 } = CART;
 
 const useCartItem = (product: IProduct) => {
@@ -21,17 +21,19 @@ const useCartItem = (product: IProduct) => {
   }, [cart]);
 
   const handleRemovingProduct = useCallback(() => {
-    if (!confirm('장바구니에서 선택한 상품을 삭제하시겠습니까?')) return;
+    if (!confirm("장바구니에서 선택한 상품을 삭제하시겠습니까?")) return;
 
     deleteProduct(product);
   }, [cart]);
 
   const handleIncrement = useCallback(() => {
+    if (amount === MAX_AMOUNT) return;
+
     updateProduct({ ...product, amount: amount + AMOUNT_UNIT });
   }, [cart]);
 
   const handleDecrement = useCallback(() => {
-    if (amount - 1 === 0) return;
+    if (amount === MIN_AMOUNT) return;
 
     updateProduct({ ...product, amount: amount - AMOUNT_UNIT });
   }, [cart]);

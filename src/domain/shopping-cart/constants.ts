@@ -4,7 +4,7 @@ export const CART = {
   PRODUCTS: {
     DEFAULT_INITIAL_AMOUNT: 1,
     MIN_AMOUNT: 1,
-    MAX_AMOUNT: 2,
+    MAX_AMOUNT: 20,
     AMOUNT_UNIT: 1,
   },
 };
