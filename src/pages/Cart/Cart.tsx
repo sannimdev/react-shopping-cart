@@ -1,33 +1,13 @@
-import React, { useCallback, useMemo } from "react";
-import { useCartContext } from "../../context/CartContext/CartContext";
+import React from "react";
 import { CartItem } from "../../components/CartItem";
+import useCart from "./hooks/useCart";
 
 function Cart() {
   const {
     cart,
-    estimatedPrice,
-    checkedProducts,
-    allChecked,
-    cartDataHandlers: { updateProducts, deleteProducts },
-  } = useCartContext();
-
-  const handleAllCheck = useCallback(() => {
-    updateProducts(cart.products.map((product) => ({ ...product, checked: !allChecked })));
-  }, [cart]);
-
-  const handleDeletingChecked = useCallback(() => {
-    if (checkedProducts.length === 0) return;
-    if (!confirm(`정말 선택하신 ${checkedProducts.length}개의 상품을 삭제하시겠습니까?`)) return;
-
-    deleteProducts(checkedProducts);
-  }, [cart]);
-
-  const orderButtonClass = useMemo(() => {
-    const classes = ["button", "flex-center"];
-    if (checkedProducts.length) classes.push("primary-button");
-    else classes.push("secondary-button");
-    return classes.join(" ");
-  }, [cart]);
+    values: { productCount, allChecked, estimatedPrice, checkedCount, nobodyChecked, orderButtonClass },
+    handlers: { handleAllCheck, handleDeletingChecked, handleOrder },
+  } = useCart();
 
   return (
     <section className="cart-section">
@@ -55,9 +35,9 @@ function Cart() {
               상품삭제
             </button>
           </div>
-          {cart.products.length > 0 && (
+          {productCount > 0 && (
             <>
-              <h3 className="cart-title">든든배송 상품({cart.products.length}개)</h3>
+              <h3 className="cart-title">든든배송 상품({checkedCount}개)</h3>
               <hr className="divide-line-gray mt-10" />
               {cart.products.map((product, idx) => (
                 <React.Fragment key={idx}>
@@ -79,7 +59,9 @@ function Cart() {
               <span className="highlight-text">{estimatedPrice.toLocaleString()}원</span>
             </div>
             <div className="flex-center mt-30 mx-10">
-              <button className={orderButtonClass}>주문하기({checkedProducts.length}개)</button>
+              <button className={orderButtonClass} onClick={handleOrder} disabled={nobodyChecked}>
+                주문하기({checkedCount}개)
+              </button>
             </div>
           </div>
         </section>
