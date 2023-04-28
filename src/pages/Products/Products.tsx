@@ -1,19 +1,44 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { ProductItem } from "../../components/ProductItem";
-import { IProduct } from "../../domain/shopping-cart/types";
-import useProducts from "./hooks/useProducts";
+import { useInfiniteQuery } from "react-query";
+import { getProducts } from "../../apis/products";
+import { useInView } from "react-intersection-observer";
+
+const queryFunction = ({ pageParam = 1 }) => getProducts({ page: pageParam, unit: 10 });
 
 function Products() {
-  const { products } = useProducts({});
+  const { ref, inView } = useInView({ threshold: 0 });
+
+  const { fetchNextPage, isLoading, data, hasNextPage } = useInfiniteQuery(
+    "products", //
+    queryFunction, //
+    {
+      getNextPageParam: (lastPage) => {
+        const { page: currentPage, endOfPage } = lastPage;
+        return currentPage < endOfPage && currentPage + 1;
+      },
+    }
+  );
+
+  useEffect(() => {
+    inView && hasNextPage && fetchNextPage();
+  }, [inView]);
+
+  if (isLoading) {
+    //TODO:나중에...
+    return <div>loading</div>;
+  }
 
   return (
     <section className="product-container">
-      {products?.map((product) => (
-        <ProductItem key={product.id} product={product} />
+      {data?.pages.map((page) => (
+        <React.Fragment key={page.page}>
+          {page.products?.map((product) => (
+            <ProductItem key={product.id} product={product} />
+          ))}
+        </React.Fragment>
       ))}
-      {/* {products.map((product) => (
-        <ProductItem key={product.id} product={product} />
-      ))} */}
+      {hasNextPage && <div style={{ visibility: "hidden" }} ref={ref}></div>}
     </section>
   );
 }
