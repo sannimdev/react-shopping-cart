@@ -1,26 +1,67 @@
-import React, { useCallback } from 'react';
-import { useCartContext } from '../../context/CartContext/CartContext';
-import { CartItem } from '../../components/CartItem';
+import React, { useCallback, useEffect } from "react";
+import { useCartContext } from "../../context/CartContext/CartContext";
+import { CartItem } from "../../components/CartItem";
+import { getProducts } from "../../apis/products";
+import { useInView } from "react-intersection-observer";
+import { useInfiniteQuery } from "react-query";
+import fetcher from "../../utils/fetcher";
+import { getProductsInCart } from "../../apis/cart";
+
+const PAGE_UNIT = 8;
+const queryFunction = ({ pageParam = 1 }) => getProductsInCart({ page: pageParam, unit: PAGE_UNIT });
+const COUNT = 100;
 
 function Cart() {
-  const {
-    cart,
-    estimatedPrice,
-    checkedProducts,
-    allChecked,
-    cartDataHandlers: { updateProducts, deleteProducts },
-  } = useCartContext();
+  const { ref, inView } = useInView({ threshold: 0 });
 
-  const handleAllCheck = useCallback(() => {
-    updateProducts(cart.products.map((product) => ({ ...product, checked: !allChecked })));
-  }, [cart]);
+  const { fetchNextPage, isLoading, data, hasNextPage } = useInfiniteQuery(
+    "cart", //
+    queryFunction, //
+    {
+      getNextPageParam: (lastPage) => {
+        const { page: currentPage, endOfPage } = lastPage;
+        return currentPage < endOfPage && parseInt(currentPage.toString(), 10) + 1;
+      },
+    }
+  );
 
-  const handleDeletingChecked = useCallback(() => {
-    if (checkedProducts.length === 0) return;
-    if (!confirm(`정말 선택하신 ${checkedProducts.length}개의 상품을 삭제하시겠습니까?`)) return;
+  useEffect(() => {
+    inView && hasNextPage && fetchNextPage();
+  }, [inView]);
 
-    deleteProducts(checkedProducts);
-  }, [cart]);
+  // const {
+  //   cart,
+  //   estimatedPrice,
+  //   checkedProducts,
+  //   allChecked,
+  //   cartDataHandlers: { updateProducts, deleteProducts },
+  // } = useCartContext();
+
+  // const handleAllCheck = useCallback(() => {
+  //   updateProducts(cart.products.map((product) => ({ ...product, checked: !allChecked })));
+  // }, [cart]);
+
+  // const handleDeletingChecked = useCallback(() => {
+  //   if (checkedProducts.length === 0) return;
+  //   if (!confirm(`정말 선택하신 ${checkedProducts.length}개의 상품을 삭제하시겠습니까?`)) return;
+
+  //   deleteProducts(checkedProducts);
+  // }, [cart]);
+
+  const estimatedPrice = 1000;
+  const allChecked = false;
+  const checkedProducts = [];
+  const handleAllCheck = () => {
+    /* */
+  };
+  const handleDeletingChecked = () => {
+    /* */
+  };
+
+  if (isLoading) {
+    //TODO: ...
+    return <div>loading</div>;
+  }
 
   return (
     <section className="cart-section">
@@ -48,18 +89,27 @@ function Cart() {
               상품삭제
             </button>
           </div>
-          {cart.products.length > 0 && (
-            <>
-              <h3 className="cart-title">든든배송 상품({cart.products.length}개)</h3>
-              <hr className="divide-line-gray mt-10" />
-              {cart.products.map((product, idx) => (
+          <>
+            <h3 className="cart-title">든든배송 상품({COUNT}개)</h3>
+            <hr className="divide-line-gray mt-10" />
+            {/* {cart.products.map((product, idx) => (
                 <React.Fragment key={idx}>
                   <CartItem product={product} />
                   <hr className="divide-line-thin mt-10" />
                 </React.Fragment>
-              ))}
-            </>
-          )}
+              ))} */}
+            {data?.pages?.map((page) => (
+              <React.Fragment key={page.page}>
+                {page?.cart?.products.map((cartItem) => (
+                  <React.Fragment key={cartItem.id}>
+                    <CartItem product={cartItem.product} />
+                    <hr className="divide-line-thin mt-10" />
+                  </React.Fragment>
+                ))}
+                <div ref={ref} style={{ visibility: "hidden" }}></div>
+              </React.Fragment>
+            ))}
+          </>
         </section>
         <section className="cart-right-section">
           <div className="cart-right-section__top">

@@ -5,7 +5,6 @@ export interface IProduct {
   price: number;
   imageUrl: string;
   amount?: number;
-  checked?: boolean;
 
   createdAt?: number;
   updatedAt?: number;
@@ -13,7 +12,13 @@ export interface IProduct {
 
 export interface ICart {
   // id: number | string;
-  products: IProduct[];
+  products: ICartProduct[];
+}
+
+export interface ICartProduct {
+  id: number;
+  product: IProduct;
+  checked?: boolean;
 }
 
 export interface IOrder {

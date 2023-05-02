@@ -1,10 +1,10 @@
 import { rest } from "msw";
 import db from "./db";
 
-const { products, orders: defaultOrders, carts: defaultCarts } = db;
+const { products, orders: defaultOrders, carts: defaultProductsInCart } = db;
 
 const orders = [...defaultOrders];
-const carts = [...defaultCarts];
+const cart = { products: [...defaultProductsInCart] };
 
 /////////////////////////////////////
 
@@ -51,10 +51,16 @@ export const handlers = [
   rest.get("/api/cart", (request, response, context) => {
     const page = request.url.searchParams.get(PAGE_KEY);
     const unit = request.url.searchParams.get(UNIT_KEY);
-    const { start, end, endOfPage, parsedPage } = analyzePages({ page, unit, items: carts });
+    const { start, end, endOfPage, parsedPage } = analyzePages({ page, unit, items: cart.products });
 
-    const responseForCarts = carts.slice(start, end);
+    const responseForProductsInCart = cart.products.slice(start, end);
+    const responseCart = { products: responseForProductsInCart };
+    console.log(responseCart, "이것만 나가나..");
 
-    return response(context.status(200), context.json({ carts: responseForCarts, page: parsedPage, endOfPage }));
+    return response(context.status(200), context.json({ cart: responseCart, page: parsedPage, endOfPage }));
+  }),
+
+  rest.get("/api/cart/count", (_, response, context) => {
+    return response(context.status(200), context.json({ count: cart.products.length }));
   }),
 ];

@@ -1,9 +1,9 @@
-import React from 'react';
-import deleteSvg from '../../assets/svgs/trash.svg';
-import AmountHandler from './AmountHandler';
-import useCartItem from './hooks/useCartItem';
-import { IProduct } from '../../domain/shopping-cart/types';
-import { CART } from '../../domain/shopping-cart/constants';
+import React from "react";
+import deleteSvg from "../../assets/svgs/trash.svg";
+import AmountHandler from "./AmountHandler";
+import useCartItem from "./hooks/useCartItem";
+import { IProduct } from "../../domain/shopping-cart/types";
+import { CART } from "../../domain/shopping-cart/constants";
 
 type TCartItemProps = {
   product: IProduct;
@@ -14,10 +14,11 @@ const {
 } = CART;
 
 function CartItem({ product }: TCartItemProps) {
-  const { name, imageUrl, checked, amount = DEFAULT_INITIAL_AMOUNT } = product;
+  const { name, imageUrl, amount = DEFAULT_INITIAL_AMOUNT } = product;
   const { totalPrice, handleToggleChecked, handleRemovingProduct, handleIncrement, handleDecrement } =
     useCartItem(product);
 
+  console.log(product);
   return (
     <div className="cart-container">
       <div className="flex gap-15 mt-10">
@@ -25,7 +26,7 @@ function CartItem({ product }: TCartItemProps) {
           type="checkbox"
           name="checkbox"
           className="checkbox"
-          checked={!!checked}
+          // checked={!!checked} TODO:
           onChange={handleToggleChecked}
         />
         <img className="w-144 h-144" src={imageUrl} alt={name} />

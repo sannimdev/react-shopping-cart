@@ -1,4 +1,4 @@
-import { IOrder, IProduct } from "./domain";
+import { ICart, ICartProduct, IOrder, IProduct } from "./domain";
 
 export interface IProductResponse {
   products: IProduct[];
@@ -10,4 +10,10 @@ export interface IOrderResponse {
   orders: IOrder[];
   // page: number;
   // endOfPage: number;
+}
+
+export interface ICartResponse {
+  cart: ICart;
+  page: number;
+  endOfPage: number;
 }
