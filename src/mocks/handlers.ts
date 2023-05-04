@@ -76,7 +76,7 @@ export const handlers = [
     return response(context.status(200), context.json({ count: cart.items.length }));
   }),
 
-  rest.patch("/api/cart/:cartItemId/:amount/", (request, response, context) => {
+  rest.patch("/api/cart/:cartItemId/:amount", (request, response, context) => {
     const { cartItemId, amount } = request.params;
     const [parsedItemId, parsedAmount] = [parseInt(cartItemId as string, 10), parseInt(amount as string, 10)];
 
@@ -85,6 +85,6 @@ export const handlers = [
       item.product.amount = parsedAmount;
       return response(context.status(200));
     }
-    return response(context.status(400), context.json({ code: 404, message: "NOT FOUND ITEM" }));
+    return response(context.status(400), context.json({ code: 405, message: "NOT FOUND ITEM" }));
   }),
 ];

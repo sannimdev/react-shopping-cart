@@ -11,10 +11,10 @@ export interface IProduct {
 }
 
 export interface ICart {
-  items: ICartProduct[];
+  items: ICartItem[];
 }
 
-export interface ICartProduct {
+export interface ICartItem {
   id: number;
   product: IProduct;
   checked?: boolean;

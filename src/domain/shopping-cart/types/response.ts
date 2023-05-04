@@ -1,4 +1,4 @@
-import { ICart, ICartProduct, IOrder, IProduct } from "./domain";
+import { ICart, IOrder, IProduct } from "./domain";
 
 export interface IProductResponse {
   products: IProduct[];

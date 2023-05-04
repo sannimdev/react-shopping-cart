@@ -5,7 +5,7 @@ import { ICart } from "../../domain/shopping-cart/types";
 import { CART } from "../../domain/shopping-cart/constants";
 
 const {
-  PRODUCTS: { DEFAULT_INITIAL_AMOUNT },
+  PRODUCT: { DEFAULT_INITIAL_AMOUNT },
 } = CART;
 
 const CartContext = createContext<ICart | null>(null);

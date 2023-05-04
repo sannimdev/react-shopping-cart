@@ -1,7 +1,7 @@
 // STEP2부터이긴 하지만...
 
 export const CART = {
-  PRODUCTS: {
+  PRODUCT: {
     DEFAULT_INITIAL_AMOUNT: 1,
     MIN_AMOUNT: 1,
     MAX_AMOUNT: 2,

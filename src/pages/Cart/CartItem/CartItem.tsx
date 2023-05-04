@@ -1,24 +1,31 @@
 import React from "react";
-import deleteSvg from "../../assets/svgs/trash.svg";
+import deleteSvg from "../../../assets/svgs/trash.svg";
 import AmountHandler from "./AmountHandler";
 import useCartItem from "./hooks/useCartItem";
-import { IProduct } from "../../domain/shopping-cart/types";
-import { CART } from "../../domain/shopping-cart/constants";
-
-type TCartItemProps = {
-  product: IProduct;
-};
+import { CART } from "../../../domain/shopping-cart/constants";
+import { ICartItem } from "../../../domain/shopping-cart/types/domain";
 
 const {
-  PRODUCTS: { DEFAULT_INITIAL_AMOUNT },
+  PRODUCT: { DEFAULT_INITIAL_AMOUNT },
 } = CART;
 
-function CartItem({ product }: TCartItemProps) {
-  const { name, imageUrl, amount = DEFAULT_INITIAL_AMOUNT } = product;
-  const { totalPrice, handleToggleChecked, handleRemovingProduct, handleIncrement, handleDecrement } =
-    useCartItem(product);
+type TCartItemProps = {
+  item: ICartItem;
+};
 
-  console.log(product);
+function CartItem({ item }: TCartItemProps) {
+  const { name, imageUrl } = item.product;
+  const {
+    amount: amountState,
+    totalPrice,
+    handleToggleChecked,
+    handleRemovingProduct,
+    handleIncrement,
+    handleDecrement,
+  } = useCartItem({
+    item,
+  });
+
   return (
     <div className="cart-container">
       <div className="flex gap-15 mt-10">
@@ -34,7 +41,7 @@ function CartItem({ product }: TCartItemProps) {
       </div>
       <div className="flex-col-center justify-end gap-15">
         <img className="cart-trash-svg" src={deleteSvg} alt="삭제" onClick={handleRemovingProduct} />
-        <AmountHandler amount={amount} onIncrement={handleIncrement} onDecrement={handleDecrement} />
+        <AmountHandler amount={amountState} onIncrement={handleIncrement} onDecrement={handleDecrement} />
         <span className="cart-price">{totalPrice.toLocaleString()}원</span>
       </div>
     </div>

@@ -21,7 +21,7 @@ type THookCartDataHandlers = () => {
 };
 
 const {
-  PRODUCTS: { AMOUNT_UNIT },
+  PRODUCT: { AMOUNT_UNIT },
 } = CART;
 
 const sortProducts = (products: IProduct[]) => products.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));

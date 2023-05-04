@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from "react";
 import { useCartContext } from "../../context/CartContext/CartContext";
-import { CartItem } from "../../components/CartItem";
+import { CartItem } from "./CartItem";
 import { getProducts } from "../../apis/products";
 import { useInView } from "react-intersection-observer";
 import { useInfiniteQuery } from "react-query";
@@ -102,7 +102,7 @@ function Cart() {
               <React.Fragment key={page.page}>
                 {page?.cart?.items?.map((cartItem) => (
                   <React.Fragment key={cartItem.id}>
-                    <CartItem product={cartItem.product} />
+                    <CartItem item={cartItem} />
                     <hr className="divide-line-thin mt-10" />
                   </React.Fragment>
                 ))}
