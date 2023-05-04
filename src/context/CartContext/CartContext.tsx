@@ -29,12 +29,12 @@ export function useCartContext() {
     throw new Error("장바구니와 관련된 설정을 코드에서 초기화하지 않았습니다.");
   }
 
-  const checkedProducts = useMemo(() => cart.products.filter(({ checked }) => checked), [cart]);
-  const allChecked = useMemo(() => cart.products.every(({ checked }) => !!checked), [cart]);
+  const checkedProducts = useMemo(() => cart.items.filter(({ checked }) => checked), [cart]);
+  const allChecked = useMemo(() => cart.items.every(({ checked }) => !!checked), [cart]);
 
   const estimatedPrice = useMemo(
     // () =>
-    //   cart.products.reduce(
+    //   cart.items.reduce(
     //     (result, { checked, price, amount = DEFAULT_INITIAL_AMOUNT }) => (checked ? result + price * amount : result),
     //     0
     //   ),

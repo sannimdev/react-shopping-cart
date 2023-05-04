@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ICart, IProduct } from "../../../domain/shopping-cart/types";
 import { CART } from "../../../domain/shopping-cart/constants";
 
-const CART_INITIAL_VALUE = { products: [] };
+const CART_INITIAL_VALUE = { items: [] };
 
 export type TCartDataHandlers = object; //TODO:
 //  {

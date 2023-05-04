@@ -100,7 +100,7 @@ function Cart() {
               ))} */}
             {data?.pages?.map((page) => (
               <React.Fragment key={page.page}>
-                {page?.cart?.products.map((cartItem) => (
+                {page?.cart?.items?.map((cartItem) => (
                   <React.Fragment key={cartItem.id}>
                     <CartItem product={cartItem.product} />
                     <hr className="divide-line-thin mt-10" />

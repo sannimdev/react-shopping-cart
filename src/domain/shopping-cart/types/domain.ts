@@ -11,8 +11,7 @@ export interface IProduct {
 }
 
 export interface ICart {
-  // id: number | string;
-  products: ICartProduct[];
+  items: ICartProduct[];
 }
 
 export interface ICartProduct {
