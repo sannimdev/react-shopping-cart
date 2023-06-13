@@ -2,6 +2,7 @@ import React, { useCallback, useEffect } from "react";
 import { CartItem } from "../../components/CartItem";
 import useCartDataHandlers from "../../hooks/useCart";
 import axios from "axios";
+import { requestDeleteItems } from "../../apis/cart";
 
 function Cart() {
   const {
@@ -25,13 +26,13 @@ function Cart() {
     if (checkedItems?.length === 0) return;
     if (!confirm(`정말 선택하신 ${checkedItems.length}개의 상품을 삭제하시겠습니까?`)) return;
 
-    try {
-      await axios.delete("/api/cart", { data: { items: checkedItems } });
-      deleteItems(checkedItems);
-    } catch (error) {
-      console.error(error);
-      alert("삭제에 실패했습니다. 다시 시도해주세요.");
+    const result = await requestDeleteItems(checkedItems);
+    if (!result) {
+      alert("삭제에 실패했습니다. 다시 시도해주세요");
+      return;
     }
+
+    deleteItems(checkedItems);
   }, [cart]);
 
   return (

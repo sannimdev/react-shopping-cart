@@ -82,11 +82,14 @@ export const handlers = [
       return response(context.status(204));
     }
 
-    cart.items.push({
-      ...product,
-      quantity: 1,
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
+    cart.items.unshift({
+      id: Date.now(),
+      product: {
+        ...product,
+        quantity: 1,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      },
     });
     return response(context.status(204));
   }),
