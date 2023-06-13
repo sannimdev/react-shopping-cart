@@ -1,12 +1,13 @@
 import React, { useCallback, useEffect } from "react";
 import { CartItem } from "../../components/CartItem";
 import useCartDataHandlers from "../../hooks/useCart";
+import axios from "axios";
 
 function Cart() {
   const {
     cart,
     estimatedPrice,
-    checkedProducts,
+    checkedItems,
     allChecked,
     cartDataHandlers: { updateItems, deleteItems },
     fetchCartItems,
@@ -20,11 +21,17 @@ function Cart() {
     updateItems(cart.items.map((item) => ({ ...item, product: { ...item.product, checked: !allChecked } })));
   }, [cart]);
 
-  const handleDeletingChecked = useCallback(() => {
-    if (checkedProducts?.length === 0) return;
-    if (!confirm(`정말 선택하신 ${checkedProducts.length}개의 상품을 삭제하시겠습니까?`)) return;
+  const handleDeletingCheckedItems = useCallback(async () => {
+    if (checkedItems?.length === 0) return;
+    if (!confirm(`정말 선택하신 ${checkedItems.length}개의 상품을 삭제하시겠습니까?`)) return;
 
-    deleteItems(checkedProducts);
+    try {
+      await axios.delete("/api/cart", { data: { items: checkedItems } });
+      deleteItems(checkedItems);
+    } catch (error) {
+      console.error(error);
+      alert("삭제에 실패했습니다. 다시 시도해주세요.");
+    }
   }, [cart]);
 
   return (
@@ -49,7 +56,7 @@ function Cart() {
                 선택해제
               </label>
             </div>
-            <button className="delete-button" onClick={handleDeletingChecked}>
+            <button className="delete-button" onClick={handleDeletingCheckedItems}>
               상품삭제
             </button>
           </div>
@@ -77,7 +84,7 @@ function Cart() {
               <span className="highlight-text">{estimatedPrice.toLocaleString()}원</span>
             </div>
             <div className="flex-center mt-30 mx-10">
-              <button className="primary-button flex-center">주문하기({checkedProducts.length}개)</button>
+              <button className="primary-button flex-center">주문하기({checkedItems.length}개)</button>
             </div>
           </div>
         </section>
