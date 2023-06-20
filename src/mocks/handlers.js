@@ -52,6 +52,7 @@ export const handlers = [
     const responseForProducts = products.slice(start, end);
 
     return response(context.status(200), context.json({ products: responseForProducts, page: parsedPage, endOfPage }));
+    // return response(context.status(500));
   }),
   rest.get("/api/orders", (_, res, context) => {
     return res(context.status(200), context.json({ orders }));
