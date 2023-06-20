@@ -67,6 +67,7 @@ export const handlers = [
     const productsInCart = cart.items.slice(start, end);
 
     return response(
+      context.delay(500),
       context.status(200),
       context.json({ cart: { items: productsInCart }, page: parsedPage, endOfPage })
     );
@@ -97,7 +98,10 @@ export const handlers = [
 
   rest.delete("/api/cart", async (request, response, context) => {
     try {
-      const { items } = await request.json();
+      const {
+        data: { items },
+      } = await request.json();
+      console.log("DELETE", items);
       cart.items = cart.items.filter(({ id }) => !items.map(({ id }) => id).includes(id));
 
       return response(context.status(204));

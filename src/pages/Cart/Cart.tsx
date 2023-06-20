@@ -1,15 +1,64 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useCallback } from "react";
 import { useCart, useCartItemHandlers } from "../../hooks";
 import { CartItem } from "../../components/CartItem";
+import { useMutation } from "react-query";
+import { ICartItemUI } from "../../components";
+import { requestDeleteItems } from "../../apis";
+
+const template = (children: React.ReactNode) => <div>{children}</div>;
 
 function Cart() {
   const {
+    status,
+    error,
+    refetch,
     cart,
     values: { estimatedPrice, checkedItems, allChecked },
     // handlers: { toggleAllCheck, deleteCheckedItems },
   } = useCart();
 
-  const { handlers: cartItemHandlers } = useCartItemHandlers();
+  const mutation = useMutation({
+    mutationFn: (item: ICartItemUI) => requestDeleteItems([item]),
+    onSuccess() {
+      console.log("다시불러오기");
+      refetch();
+    },
+  });
+
+  const deleteItem = useCallback(
+    (item: ICartItemUI) => {
+      if (!confirm("장바구니에서 선택한 상품을 삭제하시겠습니까?")) return;
+
+      // useMutation hook을 직접 호출하는 대신, mutate 메서드를 사용
+      mutation.mutate(item);
+    },
+    [mutation]
+  );
+
+  // const { handlers: cartItemHandlers } = useCartItemHandlers();
+  const cartItemHandlers = {
+    toggleChecked(item: ICartItemUI) {
+      //
+    },
+    handleDeleteItem(item: ICartItemUI) {
+      //
+      deleteItem(item);
+    },
+    handleIncrement(item: ICartItemUI) {
+      //
+    },
+    handleDecrement(item: ICartItemUI) {
+      //
+    },
+  };
+
+  if (status === "loading") {
+    return template("불러오고 있어요"); // not working.. TODO: 템플릿 작업
+  }
+
+  if (status === "error") {
+    return template("오류가 발생했어요"); // not working.. TODO: 템플릿 작업
+  }
 
   return (
     <section className="cart-section">

@@ -1,11 +1,5 @@
-import { useCallback, useEffect } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { cartState } from "../../recoil/atoms";
+import { useRecoilValue } from "recoil";
 import { allCheckedProductsSelector, checkedItemsSelector, estimatedPriceSelector } from "../../recoil/selector";
-import fetcher from "../../utils/fetcher";
-import { requestDeleteItems } from "../../apis";
-import { ICartResponse } from "../../domain/types/response";
-import useDataHandlers from "./useDataHandlers";
 import useCartQuery from "../../queries/useCartQuery";
 import { convertToViewError } from "../utils";
 
@@ -17,7 +11,7 @@ import { convertToViewError } from "../utils";
  */
 
 const useCart = () => {
-  const { data, error: queryError } = useCartQuery();
+  const { status, data, error: queryError, refetch } = useCartQuery();
 
   const error = convertToViewError(queryError as Error);
 
@@ -48,6 +42,9 @@ const useCart = () => {
   const estimatedPrice = useRecoilValue(estimatedPriceSelector);
 
   return {
+    status,
+    error,
+    refetch,
     cart,
 
     values: {

@@ -19,7 +19,7 @@ const fetcher = {
     return response.data as T;
   },
   delete: async <T>(url: string, data: any) => {
-    const response = await axios.patch(url, { data });
+    const response = await axios.delete(url, { data });
     return response.data as T;
   },
 };
