@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
 
 const fetcher = {
@@ -5,20 +6,20 @@ const fetcher = {
     const response = await axios.get(url);
     return response.data as T;
   },
-  post: async <T>(url: string) => {
-    const response = await axios.post(url);
+  post: async <T>(url: string, data: any) => {
+    const response = await axios.post(url, { data });
     return response.data as T;
   },
-  put: async <T>(url: string) => {
-    const response = await axios.put(url);
+  put: async <T>(url: string, data: any) => {
+    const response = await axios.put(url, { data });
     return response.data as T;
   },
-  patch: async <T>(url: string) => {
-    const response = await axios.patch(url);
+  patch: async <T>(url: string, data: any) => {
+    const response = await axios.patch(url, { data });
     return response.data as T;
   },
-  delete: async <T>(url: string) => {
-    const response = await axios.patch(url);
+  delete: async <T>(url: string, data: any) => {
+    const response = await axios.patch(url, { data });
     return response.data as T;
   },
 };

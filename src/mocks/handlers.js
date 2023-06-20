@@ -8,7 +8,7 @@ const orders = [...defaultOrders];
 const initializedCartItems = sortItems(
   defaultCartItems.map((item, idx) => ({
     ...item,
-    product: { ...item.product, createdAt: Date.now() + idx, updatedAt: Date.now() + idx },
+    product: { ...item.product, createdAt: Date.now() + idx, updatedAt: Date.now() + idx, checked: false },
   }))
 );
 

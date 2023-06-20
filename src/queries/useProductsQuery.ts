@@ -5,7 +5,7 @@ export const QUERY_KEY = API_URL.PRODUCTS;
 
 const fetcher = () =>
   requestProducts({
-    /*page*/
+    page: 1,
   }).then((data) => data);
 
 const useProductsQuery = () => {

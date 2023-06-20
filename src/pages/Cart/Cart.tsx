@@ -6,7 +6,7 @@ function Cart() {
   const {
     cart,
     values: { estimatedPrice, checkedItems, allChecked },
-    handlers: { toggleAllCheck, deleteCheckedItems },
+    // handlers: { toggleAllCheck, deleteCheckedItems },
   } = useCart();
 
   const { handlers: cartItemHandlers } = useCartItemHandlers();
@@ -27,15 +27,13 @@ function Cart() {
                 name="checkbox"
                 type="checkbox"
                 checked={allChecked}
-                onChange={toggleAllCheck}
+                // onChange={toggleAllCheck}
               />
               <label className="checkbox-label" htmlFor="checkbox">
                 선택해제
               </label>
             </div>
-            <button className="delete-button" onClick={deleteCheckedItems}>
-              상품삭제
-            </button>
+            <button className="delete-button" /*onClick={deleteCheckedItems}*/>상품삭제</button>
           </div>
           {cart?.items?.length > 0 && (
             <>

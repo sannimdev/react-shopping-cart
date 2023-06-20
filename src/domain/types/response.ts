@@ -1,5 +1,9 @@
 import { ICart, IOrder, IProduct } from "./domain";
 
+export interface IRequestPaging {
+  page: number;
+  unit?: number;
+}
 export interface IResponsePager {
   page: number;
   endOfPage: number;

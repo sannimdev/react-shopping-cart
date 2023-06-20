@@ -2,6 +2,7 @@ import { useRecoilState } from "recoil";
 import { ICartItemUI } from "../../components";
 import { CART } from "../../domain/constants";
 import { cartState } from "../../recoil/atoms";
+import { ICart } from "../../domain/types";
 
 export type TCartItemsHandler = (items: ICartItemUI[]) => void;
 export type TCartItemHandler = (item: ICartItemUI) => void;
@@ -16,26 +17,26 @@ export type TCartDataHandlers = {
   deleteItem: TCartItemHandler;
 };
 
-const useDataHandlers = () => {
-  const [cart, setCart] = useRecoilState(cartState);
+const useDataHandlers = (cart: ICart) => {
+  // const [cart, setCart] = useRecoilState(cartState);
 
   const insertItems = (newItems: ICartItemUI[]) => {
     const items = insertAndUpdateItems(cart.items, newItems, true);
 
-    setCart({ ...cart, items });
+    // setCart({ ...cart, items });
   };
 
   const updateItems = (newItems: ICartItemUI[]) => {
     const items = insertAndUpdateItems(cart.items, newItems);
 
-    setCart({ ...cart, items });
+    // setCart({ ...cart, items });
   };
 
   const deleteItems = (items: ICartItemUI[]) => {
     const { items: oldItems } = cart;
     const ids = items.map(({ id }) => id);
 
-    setCart({ ...cart, items: oldItems.filter(({ id }) => !ids.includes(id)) });
+    // setCart({ ...cart, items: oldItems.filter(({ id }) => !ids.includes(id)) });
   };
 
   const insertItem = (item: ICartItemUI) => insertItems([item]);
