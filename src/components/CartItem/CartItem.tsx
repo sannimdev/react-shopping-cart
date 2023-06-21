@@ -8,7 +8,7 @@ import { IProduct } from "../../domain/types";
 type TProps = {
   item: ICartItemUI;
   handlers: {
-    toggleChecked: (item: ICartItemUI) => void;
+    toggleCheck: (item: ICartItemUI) => void;
     handleDeleteItem: (item: ICartItemUI) => void;
     handleIncrement: (item: ICartItemUI) => void;
     handleDecrement: (item: ICartItemUI) => void;
@@ -17,9 +17,10 @@ type TProps = {
 
 const getTotalPrice = ({ price, quantity = CART.PRODUCTS.MIN_QUANTITY }: IProduct) => price * quantity;
 
-function CartItem({ item, handlers: { toggleChecked, handleDeleteItem, handleIncrement, handleDecrement } }: TProps) {
+function CartItem({ item, handlers: { toggleCheck, handleDeleteItem, handleIncrement, handleDecrement } }: TProps) {
   const {
-    product: { name, imageUrl, checked, quantity = CART.PRODUCTS.DEFAULT_INITIAL_QUANTITY },
+    product: { name, imageUrl, quantity = CART.PRODUCTS.DEFAULT_INITIAL_QUANTITY },
+    checked,
   } = item;
 
   return (
@@ -29,8 +30,9 @@ function CartItem({ item, handlers: { toggleChecked, handleDeleteItem, handleInc
           type="checkbox"
           name="checkbox"
           className="checkbox"
+          readOnly
           checked={!!checked}
-          onChange={() => toggleChecked(item)}
+          onChange={() => toggleCheck(item)}
         />
         <img className="w-144 h-144" src={imageUrl} alt={name} />
         <span className="cart-name">{name}</span>

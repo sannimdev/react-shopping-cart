@@ -1,5 +1,5 @@
 import { useRecoilValue } from "recoil";
-import { allCheckedProductsSelector, checkedItemsSelector, estimatedPriceSelector } from "../../recoil/selector";
+import { estimatedPriceSelector } from "../../recoil/selector";
 import useCartQuery from "../../queries/useCartQuery";
 import { convertToViewError } from "../utils";
 
@@ -17,29 +17,11 @@ const useCart = () => {
 
   const cart = data?.cart || { items: [] };
 
-  // const cartDataHandlers = useDataHandlers(cart);
-  // const { deleteItems, updateItems } = cartDataHandlers;
+  const allChecked = cart.items?.every(({ checked }) => !!checked) || false;
 
-  // const toggleAllCheck = useCallback(() => {
-  //   updateItems(cart.items.map((item) => ({ ...item, product: { ...item.product, checked: !allChecked } })));
-  // }, [cart]);
+  const checkedItems = cart.items?.filter(({ checked }) => checked);
 
-  // const deleteCheckedItems = useCallback(async () => {
-  //   if (checkedItems?.length === 0) return;
-  //   if (!confirm(`정말 선택하신 ${checkedItems.length}개의 상품을 삭제하시겠습니까?`)) return;
-
-  //   const result = await requestDeleteItems(checkedItems);
-  //   if (!result) {
-  //     alert("삭제에 실패했습니다. 다시 시도해주세요");
-  //     return;
-  //   }
-
-  //   deleteItems(checkedItems);
-  // }, [cart]);
-
-  const checkedItems = useRecoilValue(checkedItemsSelector);
-  const allChecked = useRecoilValue(allCheckedProductsSelector);
-  const estimatedPrice = useRecoilValue(estimatedPriceSelector);
+  const estimatedPrice = cart.items?.reduce((result, current) => result + current.product.price, 0) || 0;
 
   return {
     status,

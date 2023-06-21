@@ -1,9 +1,9 @@
 import React, { Fragment, useCallback } from "react";
-import { useCart, useCartItemHandlers } from "../../hooks";
+import { useCart } from "../../hooks";
 import { CartItem } from "../../components/CartItem";
 import { useMutation } from "react-query";
 import { ICartItemUI } from "../../components";
-import { requestDeleteItems } from "../../apis";
+import { requestDeleteItems, requestToggleItem } from "../../apis";
 
 const template = (children: React.ReactNode) => <div>{children}</div>;
 
@@ -13,32 +13,53 @@ function Cart() {
     error,
     refetch,
     cart,
-    values: { estimatedPrice, checkedItems, allChecked },
+    values: { estimatedPrice, allChecked, checkedItems },
     // handlers: { toggleAllCheck, deleteCheckedItems },
   } = useCart();
 
-  const mutation = useMutation({
-    mutationFn: (item: ICartItemUI) => requestDeleteItems([item]),
-    onSuccess() {
-      console.log("다시불러오기");
-      refetch();
-    },
-  });
+  const mutations = {
+    delete: useMutation({
+      mutationFn: (item: ICartItemUI) => requestDeleteItems([item]),
+      onSuccess() {
+        refetch();
+      },
+      // TODO: 실패 대응
+    }),
+    toggleCheck: useMutation({
+      mutationFn: ({ items, checked }: { items: ICartItemUI[]; checked: boolean }) => requestToggleItem(items, checked),
+      onSuccess() {
+        refetch();
+      },
+      // TODO: 실패 대응
+    }),
+  };
 
   const deleteItem = useCallback(
     (item: ICartItemUI) => {
       if (!confirm("장바구니에서 선택한 상품을 삭제하시겠습니까?")) return;
 
       // useMutation hook을 직접 호출하는 대신, mutate 메서드를 사용
-      mutation.mutate(item);
+      mutations.delete.mutate(item);
     },
-    [mutation]
+    [mutations]
   );
+
+  const toggleCheckItem = useCallback(
+    (item: ICartItemUI) => {
+      mutations.toggleCheck.mutate({ items: [item], checked: !item.checked });
+    },
+    [mutations]
+  );
+
+  const toggleAllCheck = useCallback(() => {
+    mutations.toggleCheck.mutate({ items: cart.items, checked: !allChecked });
+  }, [mutations, cart]);
 
   // const { handlers: cartItemHandlers } = useCartItemHandlers();
   const cartItemHandlers = {
-    toggleChecked(item: ICartItemUI) {
+    toggleCheck(item: ICartItemUI) {
       //
+      toggleCheckItem(item);
     },
     handleDeleteItem(item: ICartItemUI) {
       //
@@ -75,8 +96,9 @@ function Cart() {
                 className="checkbox"
                 name="checkbox"
                 type="checkbox"
-                checked={allChecked}
-                // onChange={toggleAllCheck}
+                readOnly
+                defaultChecked={allChecked}
+                onChange={toggleAllCheck}
               />
               <label className="checkbox-label" htmlFor="checkbox">
                 선택해제

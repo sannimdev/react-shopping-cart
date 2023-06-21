@@ -17,6 +17,7 @@ export interface ICart {
 export interface ICartItem {
   id: number;
   product: IProduct;
+  checked?: boolean;
 }
 
 export interface IOrder {

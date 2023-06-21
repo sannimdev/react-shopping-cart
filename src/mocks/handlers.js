@@ -8,7 +8,8 @@ const orders = [...defaultOrders];
 const initializedCartItems = sortItems(
   defaultCartItems.map((item, idx) => ({
     ...item,
-    product: { ...item.product, createdAt: Date.now() + idx, updatedAt: Date.now() + idx, checked: false },
+    product: { ...item.product, createdAt: Date.now() + idx, updatedAt: Date.now() + idx },
+    checked: false,
   }))
 );
 
@@ -101,12 +102,54 @@ export const handlers = [
       const {
         data: { items },
       } = await request.json();
-      console.log("DELETE", items);
       cart.items = cart.items.filter(({ id }) => !items.map(({ id }) => id).includes(id));
 
       return response(context.status(204));
     } catch (error) {
       console.error("delete", error);
+      return response(context.status(500));
+    }
+  }),
+
+  rest.patch("/api/cart/item/quantity", async (request, response, context) => {
+    try {
+      const {
+        data: { item },
+      } = await request.json();
+
+      const oldProduct = cart.items.find(({ id }) => id === item.id);
+      if (oldProduct) {
+        oldProduct.updatedAt = Date.now();
+        oldProduct.product.quantity = item.product.quantity;
+      }
+
+      return response(context.status(204));
+    } catch (error) {
+      console.error("patch", error);
+      return response(context.status(500));
+    }
+  }),
+
+  rest.patch("/api/cart/items/check", async (request, response, context) => {
+    try {
+      const {
+        data: { items, checked },
+      } = await request.json();
+
+      // console.log(items, checked);
+
+      items?.forEach((item) => {
+        const oldProduct = cart.items.find(({ id }) => id === item.id);
+
+        if (oldProduct) {
+          oldProduct.updatedAt = Date.now();
+          oldProduct.checked = checked;
+        }
+      });
+
+      return response(context.status(204));
+    } catch (error) {
+      console.error("patch", error, "에라 왜 에라");
       return response(context.status(500));
     }
   }),

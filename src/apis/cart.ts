@@ -1,5 +1,4 @@
-import axios from "axios";
-import { ICart, ICartItem, IProduct } from "../domain/types";
+import { ICartItem, IProduct } from "../domain/types";
 import { API_URL } from "./endpoints";
 import { ICartResponse, IRequestPaging } from "../domain/types/response";
 import fetcher from "../utils/fetcher";
@@ -7,6 +6,26 @@ import fetcher from "../utils/fetcher";
 export async function requestDeleteItems(items: ICartItem[]): Promise<boolean> {
   try {
     const response = await fetcher.delete<{ status: number }>(API_URL.CART, { data: { items } });
+    return response.status === 204;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+}
+
+export async function requestToggleItem(items: ICartItem[], checked: boolean): Promise<boolean> {
+  try {
+    const response = await fetcher.patch<{ status: number }>(API_URL.CART_ITEMS_CHECK, { items, checked });
+    return response.status === 204;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+}
+
+export async function requestUpdateQuantity(item: ICartItem): Promise<boolean> {
+  try {
+    const response = await fetcher.patch<{ status: number }>(API_URL.CART_ITEM_QUANTITY, { item });
     return response.status === 204;
   } catch (error) {
     console.error(error);
