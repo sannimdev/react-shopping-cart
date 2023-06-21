@@ -1,5 +1,4 @@
-import { IProductResponse } from "../domain/types";
-import { IRequestPaging } from "../domain/types/response";
+import { IProductResponse, IRequestPaging } from "../domain/types/response";
 import fetcher from "../utils/fetcher";
 import { API_URL } from "./endpoints";
 
@@ -8,7 +7,7 @@ export async function requestProducts({ page = 1, unit = 2_999_999_9999_999 }: I
     const params = new URLSearchParams({ page: page.toString(), unit: unit.toString() });
     const URL = `${API_URL.PRODUCTS}?${params.toString()}`;
 
-    return fetcher.get(URL) as Promise<IProductResponse>;
+    return fetcher.get<IProductResponse>(URL);
   } catch (error) {
     console.error(error);
     throw error;

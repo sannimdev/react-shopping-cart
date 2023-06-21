@@ -3,7 +3,7 @@ import fetcher from "../utils/fetcher";
 
 export async function requestMyOrders() {
   try {
-    return fetcher.get("/api/orders") as Promise<IOrderResponse>;
+    return fetcher.get<IOrderResponse>("/api/orders");
   } catch (error) {
     console.error(error);
     throw error;

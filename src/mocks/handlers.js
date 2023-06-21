@@ -42,18 +42,9 @@ export const handlers = [
     const unit = request.url.searchParams.get(UNIT_KEY);
     const { start, end, endOfPage, parsedPage } = analyzePages({ page, unit, items: products });
 
-    // console.log(`
-    //   page: ${page},
-    //   unit: ${unit},
-    //   start: ${start},
-    //   end: ${end},
-    //   endOfPage: ${endOfPage}
-    // `);
-
     const responseForProducts = products.slice(start, end);
 
     return response(context.status(200), context.json({ products: responseForProducts, page: parsedPage, endOfPage }));
-    // return response(context.status(500));
   }),
   rest.get("/api/orders", (_, res, context) => {
     return res(context.status(200), context.json({ orders }));
@@ -75,15 +66,7 @@ export const handlers = [
   }),
 
   rest.post("/api/cart", async (request, response, context) => {
-    const product = await request.json();
-
-    const oldProduct = cart.items.find(({ id }) => id === product.id);
-
-    if (oldProduct) {
-      oldProduct.updatedAt = Date.now();
-      oldProduct.quantity = oldProduct.quantity ? oldProduct.quantity + 1 : 1;
-      return response(context.status(204));
-    }
+    const { data: product } = await request.json();
 
     cart.items.unshift({
       id: Date.now(),

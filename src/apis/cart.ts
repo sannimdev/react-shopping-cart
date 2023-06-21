@@ -5,7 +5,7 @@ import fetcher from "../utils/fetcher";
 
 export async function requestDeleteItems(items: ICartItem[]): Promise<boolean> {
   try {
-    const response = await fetcher.delete<{ status: number }>(API_URL.CART, { data: { items } });
+    const response = await fetcher.delete(API_URL.CART, { data: { items } });
     return response.status === 204;
   } catch (error) {
     console.error(error);
@@ -15,7 +15,7 @@ export async function requestDeleteItems(items: ICartItem[]): Promise<boolean> {
 
 export async function requestToggleItem(items: ICartItem[], checked: boolean): Promise<boolean> {
   try {
-    const response = await fetcher.patch<{ status: number }>(API_URL.CART_ITEMS_CHECK, { items, checked });
+    const response = await fetcher.patch(API_URL.CART_ITEMS_CHECK, { items, checked });
     return response.status === 204;
   } catch (error) {
     console.error(error);
@@ -25,7 +25,7 @@ export async function requestToggleItem(items: ICartItem[], checked: boolean): P
 
 export async function requestUpdateQuantity(item: ICartItem): Promise<boolean> {
   try {
-    const response = await fetcher.patch<{ status: number }>(API_URL.CART_ITEM_QUANTITY, { item });
+    const response = await fetcher.patch(API_URL.CART_ITEM_QUANTITY, { item });
     return response.status === 204;
   } catch (error) {
     console.error(error);
@@ -35,7 +35,7 @@ export async function requestUpdateQuantity(item: ICartItem): Promise<boolean> {
 
 export async function requestAddItem(product: IProduct): Promise<boolean> {
   try {
-    const response = await fetcher.post<{ status: number }>(API_URL.CART, product);
+    const response = await fetcher.post(API_URL.CART, product);
     return response.status === 204;
   } catch (error) {
     console.error(error);

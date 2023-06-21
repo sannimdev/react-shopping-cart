@@ -1,10 +1,6 @@
-import React, { Fragment, useCallback } from "react";
-import { useCart } from "../../hooks";
+import React, { Fragment } from "react";
+import { useCart, useCartItemHandlers } from "../../hooks";
 import { CartItem } from "../../components/CartItem";
-import { useMutation } from "react-query";
-import { requestDeleteItems, requestToggleItem, requestUpdateQuantity } from "../../apis";
-import { CART } from "../../domain/constants";
-import { ICartItem } from "../../domain/types";
 
 const template = (children: React.ReactNode) => <div>{children}</div>;
 
@@ -12,94 +8,11 @@ function Cart() {
   const {
     status,
     error,
-    refetch,
     cart,
     values: { estimatedPrice, allChecked, checkedItems },
-    // handlers: { toggleAllCheck, deleteCheckedItems },
   } = useCart();
 
-  const mutations = {
-    delete: useMutation({
-      mutationFn: (items: ICartItem[]) => requestDeleteItems(items),
-      onSuccess() {
-        refetch();
-      },
-      // TODO: 실패 대응
-    }),
-    toggleCheck: useMutation({
-      mutationFn: ({ items, checked }: { items: ICartItem[]; checked: boolean }) => requestToggleItem(items, checked),
-      onSuccess() {
-        refetch();
-      },
-      // TODO: 실패 대응
-    }),
-    updateAmount: useMutation({
-      mutationFn: (item: ICartItem) => requestUpdateQuantity(item),
-      onSuccess() {
-        refetch();
-      },
-    }),
-  };
-
-  const deleteCheckedItems = useCallback(() => {
-    if (!confirm("장바구니에서 선택한 상품을 삭제하시겠습니까?")) return;
-
-    mutations.delete.mutate(checkedItems);
-  }, [mutations]);
-
-  const deleteItem = useCallback(
-    (item: ICartItem) => {
-      if (!confirm("상품을 삭제하시겠습니까?")) return;
-
-      // useMutation hook을 직접 호출하는 대신, mutate 메서드를 사용
-      mutations.delete.mutate([item]);
-    },
-    [mutations]
-  );
-
-  const toggleCheckItem = useCallback(
-    (item: ICartItem) => {
-      mutations.toggleCheck.mutate({ items: [item], checked: !item.checked });
-    },
-    [mutations]
-  );
-
-  const toggleAllCheck = useCallback(() => {
-    mutations.toggleCheck.mutate({ items: cart.items, checked: !allChecked });
-  }, [mutations, cart]);
-
-  const updateItemQuantity = useCallback(
-    (item: ICartItem) => {
-      mutations.updateAmount.mutate(item);
-    },
-    [mutations, cart]
-  );
-
-  // const { handlers: cartItemHandlers } = useCartItemHandlers();
-  const cartItemHandlers = {
-    toggleCheck(item: ICartItem) {
-      //
-      toggleCheckItem(item);
-    },
-    handleDeleteItem(item: ICartItem) {
-      //
-      deleteItem(item);
-    },
-    handleIncrement(item: ICartItem) {
-      const quantity = (item.product.quantity ?? CART.PRODUCTS.DEFAULT_INITIAL_QUANTITY) + CART.PRODUCTS.QUANTITY_UNIT;
-
-      if (quantity <= CART.PRODUCTS.MAX_QUANTITY) {
-        updateItemQuantity({ ...item, product: { ...item.product, quantity } });
-      }
-    },
-    handleDecrement(item: ICartItem) {
-      const quantity = (item.product.quantity ?? CART.PRODUCTS.DEFAULT_INITIAL_QUANTITY) - CART.PRODUCTS.QUANTITY_UNIT;
-
-      if (quantity >= CART.PRODUCTS.MIN_QUANTITY) {
-        updateItemQuantity({ ...item, product: { ...item.product, quantity } });
-      }
-    },
-  };
+  const { toggleAllCheck, deleteCheckedItems, cartItemHandlers } = useCartItemHandlers();
 
   if (status === "loading") {
     return template("불러오고 있어요"); // not working.. TODO: 템플릿 작업
