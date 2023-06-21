@@ -1,5 +1,4 @@
-import { useRecoilValue } from "recoil";
-import { estimatedPriceSelector } from "../../recoil/selector";
+import { CART } from "../../domain/constants";
 import useCartQuery from "../../queries/useCartQuery";
 import { convertToViewError } from "../utils";
 
@@ -19,9 +18,14 @@ const useCart = () => {
 
   const allChecked = cart.items?.every(({ checked }) => !!checked) || false;
 
-  const checkedItems = cart.items?.filter(({ checked }) => checked);
+  const checkedItems = cart.items?.filter(({ checked }) => checked) || [];
 
-  const estimatedPrice = cart.items?.reduce((result, current) => result + current.product.price, 0) || 0;
+  const estimatedPrice =
+    checkedItems.reduce(
+      (result, current) =>
+        result + current.product.price * (current.product.quantity ?? CART.PRODUCTS.DEFAULT_INITIAL_QUANTITY),
+      0
+    ) || 0;
 
   return {
     status,

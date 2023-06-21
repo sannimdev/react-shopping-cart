@@ -125,7 +125,7 @@ export const handlers = [
 
       return response(context.status(204));
     } catch (error) {
-      console.error("patch", error);
+      console.error("quantity patch", error);
       return response(context.status(500));
     }
   }),
@@ -149,7 +149,7 @@ export const handlers = [
 
       return response(context.status(204));
     } catch (error) {
-      console.error("patch", error, "에라 왜 에라");
+      console.error("check patch", error);
       return response(context.status(500));
     }
   }),

@@ -5,6 +5,7 @@ export interface IProduct {
   price: number;
   imageUrl: string;
   quantity?: number;
+  checked?: boolean; // 서버에서도 체크 여부 관리
 
   createdAt?: number;
   updatedAt?: number;

@@ -2,16 +2,15 @@ import React from "react";
 import deleteSvg from "../../assets/svgs/trash.svg";
 import QuantityHandler from "./QuantityHandler";
 import { CART } from "../../domain/constants";
-import { ICartItemUI } from "../types";
-import { IProduct } from "../../domain/types";
+import { ICartItem, IProduct } from "../../domain/types";
 
 type TProps = {
-  item: ICartItemUI;
+  item: ICartItem;
   handlers: {
-    toggleCheck: (item: ICartItemUI) => void;
-    handleDeleteItem: (item: ICartItemUI) => void;
-    handleIncrement: (item: ICartItemUI) => void;
-    handleDecrement: (item: ICartItemUI) => void;
+    toggleCheck: (item: ICartItem) => void;
+    handleDeleteItem: (item: ICartItem) => void;
+    handleIncrement: (item: ICartItem) => void;
+    handleDecrement: (item: ICartItem) => void;
   };
 };
 

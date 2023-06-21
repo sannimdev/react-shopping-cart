@@ -1,11 +1,8 @@
-import { useRecoilState } from "recoil";
-import { ICartItemUI } from "../../components";
 import { CART } from "../../domain/constants";
-import { cartState } from "../../recoil/atoms";
-import { ICart } from "../../domain/types";
+import { ICart, ICartItem } from "../../domain/types";
 
-export type TCartItemsHandler = (items: ICartItemUI[]) => void;
-export type TCartItemHandler = (item: ICartItemUI) => void;
+export type TCartItemsHandler = (items: ICartItem[]) => void;
+export type TCartItemHandler = (item: ICartItem) => void;
 
 export type TCartDataHandlers = {
   insertItems: TCartItemsHandler;
@@ -20,28 +17,28 @@ export type TCartDataHandlers = {
 const useDataHandlers = (cart: ICart) => {
   // const [cart, setCart] = useRecoilState(cartState);
 
-  const insertItems = (newItems: ICartItemUI[]) => {
+  const insertItems = (newItems: ICartItem[]) => {
     const items = insertAndUpdateItems(cart.items, newItems, true);
 
     // setCart({ ...cart, items });
   };
 
-  const updateItems = (newItems: ICartItemUI[]) => {
+  const updateItems = (newItems: ICartItem[]) => {
     const items = insertAndUpdateItems(cart.items, newItems);
 
     // setCart({ ...cart, items });
   };
 
-  const deleteItems = (items: ICartItemUI[]) => {
+  const deleteItems = (items: ICartItem[]) => {
     const { items: oldItems } = cart;
     const ids = items.map(({ id }) => id);
 
     // setCart({ ...cart, items: oldItems.filter(({ id }) => !ids.includes(id)) });
   };
 
-  const insertItem = (item: ICartItemUI) => insertItems([item]);
-  const updateItem = (item: ICartItemUI) => updateItems([item]);
-  const deleteItem = (item: ICartItemUI) => deleteItems([item]);
+  const insertItem = (item: ICartItem) => insertItems([item]);
+  const updateItem = (item: ICartItem) => updateItems([item]);
+  const deleteItem = (item: ICartItem) => deleteItems([item]);
 
   return {
     insertItems,
@@ -56,11 +53,11 @@ const useDataHandlers = (cart: ICart) => {
 
 export default useDataHandlers;
 
-function sortItems(items: ICartItemUI[]) {
+function sortItems(items: ICartItem[]) {
   return items.sort((a, b) => (b.product.createdAt || 0) - (a.product.createdAt || 0));
 }
 
-function insertAndUpdateItems(oldItems: ICartItemUI[], newItems: ICartItemUI[], isIncreasingQuantity = false) {
+function insertAndUpdateItems(oldItems: ICartItem[], newItems: ICartItem[], isIncreasingQuantity = false) {
   const newProductIds = newItems.map(({ id }) => id);
 
   const items = [

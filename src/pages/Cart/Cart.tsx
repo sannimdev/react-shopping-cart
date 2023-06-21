@@ -2,8 +2,9 @@ import React, { Fragment, useCallback } from "react";
 import { useCart } from "../../hooks";
 import { CartItem } from "../../components/CartItem";
 import { useMutation } from "react-query";
-import { ICartItemUI } from "../../components";
-import { requestDeleteItems, requestToggleItem } from "../../apis";
+import { requestDeleteItems, requestToggleItem, requestUpdateQuantity } from "../../apis";
+import { CART } from "../../domain/constants";
+import { ICartItem } from "../../domain/types";
 
 const template = (children: React.ReactNode) => <div>{children}</div>;
 
@@ -19,33 +20,45 @@ function Cart() {
 
   const mutations = {
     delete: useMutation({
-      mutationFn: (item: ICartItemUI) => requestDeleteItems([item]),
+      mutationFn: (items: ICartItem[]) => requestDeleteItems(items),
       onSuccess() {
         refetch();
       },
       // TODO: 실패 대응
     }),
     toggleCheck: useMutation({
-      mutationFn: ({ items, checked }: { items: ICartItemUI[]; checked: boolean }) => requestToggleItem(items, checked),
+      mutationFn: ({ items, checked }: { items: ICartItem[]; checked: boolean }) => requestToggleItem(items, checked),
       onSuccess() {
         refetch();
       },
       // TODO: 실패 대응
     }),
+    updateAmount: useMutation({
+      mutationFn: (item: ICartItem) => requestUpdateQuantity(item),
+      onSuccess() {
+        refetch();
+      },
+    }),
   };
 
+  const deleteCheckedItems = useCallback(() => {
+    if (!confirm("장바구니에서 선택한 상품을 삭제하시겠습니까?")) return;
+
+    mutations.delete.mutate(checkedItems);
+  }, [mutations]);
+
   const deleteItem = useCallback(
-    (item: ICartItemUI) => {
-      if (!confirm("장바구니에서 선택한 상품을 삭제하시겠습니까?")) return;
+    (item: ICartItem) => {
+      if (!confirm("상품을 삭제하시겠습니까?")) return;
 
       // useMutation hook을 직접 호출하는 대신, mutate 메서드를 사용
-      mutations.delete.mutate(item);
+      mutations.delete.mutate([item]);
     },
     [mutations]
   );
 
   const toggleCheckItem = useCallback(
-    (item: ICartItemUI) => {
+    (item: ICartItem) => {
       mutations.toggleCheck.mutate({ items: [item], checked: !item.checked });
     },
     [mutations]
@@ -55,21 +68,36 @@ function Cart() {
     mutations.toggleCheck.mutate({ items: cart.items, checked: !allChecked });
   }, [mutations, cart]);
 
+  const updateItemQuantity = useCallback(
+    (item: ICartItem) => {
+      mutations.updateAmount.mutate(item);
+    },
+    [mutations, cart]
+  );
+
   // const { handlers: cartItemHandlers } = useCartItemHandlers();
   const cartItemHandlers = {
-    toggleCheck(item: ICartItemUI) {
+    toggleCheck(item: ICartItem) {
       //
       toggleCheckItem(item);
     },
-    handleDeleteItem(item: ICartItemUI) {
+    handleDeleteItem(item: ICartItem) {
       //
       deleteItem(item);
     },
-    handleIncrement(item: ICartItemUI) {
-      //
+    handleIncrement(item: ICartItem) {
+      const quantity = (item.product.quantity ?? CART.PRODUCTS.DEFAULT_INITIAL_QUANTITY) + CART.PRODUCTS.QUANTITY_UNIT;
+
+      if (quantity <= CART.PRODUCTS.MAX_QUANTITY) {
+        updateItemQuantity({ ...item, product: { ...item.product, quantity } });
+      }
     },
-    handleDecrement(item: ICartItemUI) {
-      //
+    handleDecrement(item: ICartItem) {
+      const quantity = (item.product.quantity ?? CART.PRODUCTS.DEFAULT_INITIAL_QUANTITY) - CART.PRODUCTS.QUANTITY_UNIT;
+
+      if (quantity >= CART.PRODUCTS.MIN_QUANTITY) {
+        updateItemQuantity({ ...item, product: { ...item.product, quantity } });
+      }
     },
   };
 
@@ -104,7 +132,9 @@ function Cart() {
                 선택해제
               </label>
             </div>
-            <button className="delete-button" /*onClick={deleteCheckedItems}*/>상품삭제</button>
+            <button className="delete-button" onClick={deleteCheckedItems}>
+              상품삭제
+            </button>
           </div>
           {cart?.items?.length > 0 && (
             <>

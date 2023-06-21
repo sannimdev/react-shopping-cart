@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { useCart } from "..";
-import { ICartItemUI } from "../../components";
 import { CART } from "../../domain/constants";
+import { ICartItem } from "../../domain/types";
 
 const useCartItemHandlers = () => {
   const {
@@ -12,14 +12,14 @@ const useCartItemHandlers = () => {
   } = useCart();
 
   const toggleChecked = useCallback(
-    (item: ICartItemUI) => {
+    (item: ICartItem) => {
       // updateItem({ ...item, product: { ...item.product, checked: !item.product.checked } });
     },
     [cart]
   );
 
   const handleDeleteItem = useCallback(
-    (item: ICartItemUI) => {
+    (item: ICartItem) => {
       if (!confirm("장바구니에서 선택한 상품을 삭제하시겠습니까?")) return;
 
       // deleteItem(item);
@@ -28,7 +28,7 @@ const useCartItemHandlers = () => {
   );
 
   const handleIncrement = useCallback(
-    (item: ICartItemUI) => {
+    (item: ICartItem) => {
       const {
         product: { quantity = CART.PRODUCTS.MIN_QUANTITY },
       } = item;
@@ -39,7 +39,7 @@ const useCartItemHandlers = () => {
   );
 
   const handleDecrement = useCallback(
-    (item: ICartItemUI) => {
+    (item: ICartItem) => {
       const {
         product: { quantity = CART.PRODUCTS.MIN_QUANTITY },
       } = item;
