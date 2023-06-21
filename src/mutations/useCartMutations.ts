@@ -1,31 +1,45 @@
 import { useMutation, useQueryClient } from "react-query";
-import { QUERY_KEY } from "../queries/useCartQuery";
 import { ICartItem } from "../domain/types";
 import { requestDeleteItems, requestToggleItem, requestUpdateQuantity } from "../apis";
+import { convertToViewError } from "../hooks/utils";
+import { IResponseError } from "../domain/types/response";
+import { useMemo } from "react";
 
-const useCartMutations = () => {
+type TProp =
+  | {
+      setError?: React.Dispatch<React.SetStateAction<string | null>>;
+    }
+  | undefined
+  | null;
+
+const useCartMutations = (prop: TProp) => {
+  const setError = prop?.setError;
+
   const queryClient = useQueryClient();
+  const commonRequestEventHandler = useMemo(
+    () => ({
+      onSuccess() {
+        queryClient.invalidateQueries();
+      },
+      onError(error: IResponseError) {
+        setError?.(convertToViewError(error).message);
+      },
+    }),
+    [queryClient]
+  );
 
   return {
     deleteItems: useMutation({
       mutationFn: (items: ICartItem[]) => requestDeleteItems(items),
-      onSuccess() {
-        queryClient.invalidateQueries(QUERY_KEY);
-      },
-      // TODO: 실패 대응
+      ...commonRequestEventHandler,
     }),
     toggleCheck: useMutation({
       mutationFn: ({ items, checked }: { items: ICartItem[]; checked: boolean }) => requestToggleItem(items, checked),
-      onSuccess() {
-        queryClient.invalidateQueries(QUERY_KEY);
-      },
-      // TODO: 실패 대응
+      ...commonRequestEventHandler,
     }),
     updateQuantity: useMutation({
       mutationFn: (item: ICartItem) => requestUpdateQuantity(item),
-      onSuccess() {
-        queryClient.invalidateQueries(QUERY_KEY);
-      },
+      ...commonRequestEventHandler,
     }),
   };
 };

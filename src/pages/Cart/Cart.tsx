@@ -1,10 +1,12 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import { useCart, useCartItemHandlers } from "../../hooks";
 import { CartItem } from "../../components/CartItem";
 
 const template = (children: React.ReactNode) => <div>{children}</div>;
 
 function Cart() {
+  const [errorMessage, setError] = useState<string | null>(null);
+
   const {
     status,
     error,
@@ -12,18 +14,19 @@ function Cart() {
     values: { estimatedPrice, allChecked, checkedItems },
   } = useCart();
 
-  const { toggleAllCheck, deleteCheckedItems, cartItemHandlers } = useCartItemHandlers();
+  const { toggleAllCheck, deleteCheckedItems, cartItemHandlers } = useCartItemHandlers({ setError });
 
   if (status === "loading") {
     return template("불러오고 있어요"); // not working.. TODO: 템플릿 작업
   }
 
   if (status === "error") {
-    return template("오류가 발생했어요"); // not working.. TODO: 템플릿 작업
+    return template(error.message); // not working.. TODO: 템플릿 작업
   }
 
   return (
     <section className="cart-section">
+      {errorMessage && <div>{errorMessage}</div>}
       <header className="flex-col-center mt-20">
         <h2 className="cart-section__title">장바구니</h2>
         <hr className="divide-line mt-20" />

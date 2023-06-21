@@ -1,12 +1,13 @@
 import { requestAddItem } from "../apis";
 import { IProduct } from "../domain/types";
+import { IResponseError } from "../domain/types/response";
 import useProductsQuery from "../queries/useProductsQuery";
 import { convertToViewError } from "./utils";
 
 const useProducts = () => {
   const { data, status, error: queryError } = useProductsQuery();
 
-  const error = convertToViewError(queryError as Error);
+  const error = convertToViewError(queryError as IResponseError);
 
   const products = data?.products || [];
 

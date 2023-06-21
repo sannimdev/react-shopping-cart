@@ -19,3 +19,8 @@ export interface ICartResponse extends IResponsePager {
 export interface IOrderResponse extends IResponsePager {
   orders: IOrder[];
 }
+
+export interface IResponseError {
+  message?: string;
+  response: { data: { customMessage?: string } };
+}

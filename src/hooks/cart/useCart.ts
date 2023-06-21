@@ -1,31 +1,28 @@
+import { useMemo } from "react";
 import { CART } from "../../domain/constants";
+import useCartMutations from "../../mutations/useCartMutations";
 import useCartQuery from "../../queries/useCartQuery";
 import { convertToViewError } from "../utils";
-
-/**
- * TODO: 대응할 것
- * - 상품 삭제
- * - 수량 조절
- * - 선택 여부
- */
+import { IResponseError } from "../../domain/types/response";
 
 const useCart = () => {
   const { status, data, error: queryError, refetch } = useCartQuery();
+  const { deleteItems, toggleCheck, updateQuantity } = useCartMutations(null);
+  const error = convertToViewError(queryError as IResponseError);
 
-  const error = convertToViewError(queryError as Error);
+  const cart = useMemo(() => data?.cart || { items: [] }, [data]);
 
-  const cart = data?.cart || { items: [] };
-
-  const allChecked = cart.items?.every(({ checked }) => !!checked) || false;
-
-  const checkedItems = cart.items?.filter(({ checked }) => checked) || [];
-
-  const estimatedPrice =
-    checkedItems.reduce(
-      (result, current) =>
-        result + current.product.price * (current.product.quantity ?? CART.PRODUCTS.DEFAULT_INITIAL_QUANTITY),
-      0
-    ) || 0;
+  const allChecked = useMemo(() => cart.items?.every(({ checked }) => !!checked) || false, [cart]);
+  const checkedItems = useMemo(() => cart.items?.filter(({ checked }) => checked) || [], [cart]);
+  const estimatedPrice = useMemo(
+    () =>
+      checkedItems.reduce(
+        (result, current) =>
+          result + current.product.price * (current.product.quantity ?? CART.PRODUCTS.DEFAULT_INITIAL_QUANTITY),
+        0
+      ) || 0,
+    [checkedItems]
+  );
 
   return {
     status,
@@ -39,11 +36,11 @@ const useCart = () => {
       estimatedPrice,
     },
 
-    // handlers: {
-    //   // cartDataHandlers,
-    //   // toggleAllCheck,
-    //   // deleteCheckedItems,
-    // },
+    mutations: {
+      deleteItems,
+      toggleCheck,
+      updateQuantity,
+    },
   };
 };
 

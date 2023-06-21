@@ -1,18 +1,25 @@
-import { useMutation } from "react-query";
-import { requestDeleteItems, requestToggleItem, requestUpdateQuantity } from "../../apis";
 import { ICartItem } from "../../domain/types";
 import useCart from "./useCart";
 import { useCallback } from "react";
 import { CART } from "../../domain/constants";
 import useCartMutations from "../../mutations/useCartMutations";
 
-const useCartItemHandlers = () => {
+type TProps =
+  | {
+      setError?: React.Dispatch<React.SetStateAction<string | null>>;
+    }
+  | undefined
+  | null;
+
+const useCartItemHandlers = (props: TProps) => {
+  const setError = props?.setError;
+
   const {
     cart,
     values: { allChecked, checkedItems },
   } = useCart();
 
-  const { deleteItems, toggleCheck, updateQuantity } = useCartMutations();
+  const { deleteItems, toggleCheck, updateQuantity } = useCartMutations({ setError });
 
   const updateItemQuantity = useCallback(
     (item: ICartItem) => {
@@ -33,14 +40,20 @@ const useCartItemHandlers = () => {
 
   const cartItemHandlers = {
     toggleCheck(item: ICartItem) {
+      setError?.(null);
+
       toggleCheck.mutate({ items: [item], checked: !item.checked });
     },
     handleDeleteItem(item: ICartItem) {
+      setError?.(null);
+
       if (!confirm("상품을 삭제하시겠습니까?")) return;
 
       deleteItems.mutate([item]);
     },
     handleIncrement(item: ICartItem) {
+      setError?.(null);
+
       const quantity = (item.product.quantity ?? CART.PRODUCTS.DEFAULT_INITIAL_QUANTITY) + CART.PRODUCTS.QUANTITY_UNIT;
 
       if (quantity <= CART.PRODUCTS.MAX_QUANTITY) {
@@ -48,6 +61,8 @@ const useCartItemHandlers = () => {
       }
     },
     handleDecrement(item: ICartItem) {
+      setError?.(null);
+
       const quantity = (item.product.quantity ?? CART.PRODUCTS.DEFAULT_INITIAL_QUANTITY) - CART.PRODUCTS.QUANTITY_UNIT;
 
       if (quantity >= CART.PRODUCTS.MIN_QUANTITY) {

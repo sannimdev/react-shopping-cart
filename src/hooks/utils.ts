@@ -1,3 +1,4 @@
+import { IResponseError } from "../domain/types/response";
 import { IViewError } from "./types";
 
 function parseStatusCode(message?: string): number {
@@ -26,7 +27,11 @@ function parseMessage(status: number): string {
   }
 }
 
-export function convertToViewError(error: Error): IViewError {
+export function convertToViewError(error: IResponseError): IViewError {
+  if (error?.response?.data?.customMessage) {
+    return { message: error.response.data.customMessage };
+  }
+
   const status = parseStatusCode(error?.message);
   const message = parseMessage(status);
   return { title: "에러 테스트", message };

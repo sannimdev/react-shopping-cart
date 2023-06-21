@@ -1,5 +1,7 @@
 import { rest } from "msw";
 import db from "./db";
+import { RESPONSE_CODE } from "../apis";
+import { generateError } from "./util";
 
 const { products, orders: defaultOrders, cartItems: defaultCartItems } = db;
 const sortItems = (items) => items.sort((a, b) => (b.product.createdAt || 0) - (a.product.createdAt || 0));
@@ -59,7 +61,7 @@ export const handlers = [
     const productsInCart = cart.items.slice(start, end);
 
     return response(
-      context.delay(500),
+      context.delay(RESPONSE_CODE.FAILED_RESPONSE),
       context.status(200),
       context.json({ cart: { items: productsInCart }, page: parsedPage, endOfPage })
     );
@@ -76,8 +78,10 @@ export const handlers = [
         createdAt: Date.now(),
         updatedAt: Date.now(),
       },
+      checked: true,
     });
-    return response(context.status(204));
+
+    return response(context.status(RESPONSE_CODE.SUCCESS_EMPTY));
   }),
 
   rest.delete("/api/cart", async (request, response, context) => {
@@ -87,10 +91,12 @@ export const handlers = [
       } = await request.json();
       cart.items = cart.items.filter(({ id }) => !items.map(({ id }) => id).includes(id));
 
-      return response(context.status(204));
+      return response(context.status(RESPONSE_CODE.SUCCESS_EMPTY));
     } catch (error) {
-      console.error("delete", error);
-      return response(context.status(500));
+      return response(
+        context.status(RESPONSE_CODE.FAILED_RESPONSE),
+        context.json(generateError("상품 삭제에 실패했습니다. 다시 시도해 주세요."))
+      );
     }
   }),
 
@@ -106,10 +112,13 @@ export const handlers = [
         oldProduct.product.quantity = item.product.quantity;
       }
 
-      return response(context.status(204));
+      return response(context.status(RESPONSE_CODE.SUCCESS_EMPTY));
     } catch (error) {
       console.error("quantity patch", error);
-      return response(context.status(500));
+      return response(
+        context.status(RESPONSE_CODE.FAILED_RESPONSE),
+        context.json(generateError("수량 조절에 실패했습니다."))
+      );
     }
   }),
 
@@ -118,8 +127,6 @@ export const handlers = [
       const {
         data: { items, checked },
       } = await request.json();
-
-      // console.log(items, checked);
 
       items?.forEach((item) => {
         const oldProduct = cart.items.find(({ id }) => id === item.id);
@@ -130,10 +137,10 @@ export const handlers = [
         }
       });
 
-      return response(context.status(204));
+      return response(context.status(RESPONSE_CODE.SUCCESS_EMPTY));
     } catch (error) {
       console.error("check patch", error);
-      return response(context.status(500));
+      return response(context.status(RESPONSE_CODE.FAILED_RESPONSE));
     }
   }),
 ];
