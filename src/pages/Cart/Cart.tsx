@@ -1,6 +1,7 @@
 import React, { Fragment, useState } from "react";
 import { useCart, useCartItemHandlers } from "../../hooks";
 import { CartItem } from "../../components/CartItem";
+import { Link } from "react-router-dom";
 
 const template = (children: React.ReactNode) => <div>{children}</div>;
 
@@ -76,7 +77,9 @@ function Cart() {
               <span className="highlight-text">{estimatedPrice.toLocaleString()}원</span>
             </div>
             <div className="flex-center mt-30 mx-10">
-              <button className="primary-button flex-center">주문하기({checkedItems.length}개)</button>
+              <button className="primary-button flex-center">
+                <Link to="/todo">주문하기({checkedItems.length}개)</Link>
+              </button>
             </div>
           </div>
         </section>

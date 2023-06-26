@@ -1,9 +1,11 @@
 import React from "react";
-import { OrderItem } from "../../components";
-import { useOrders } from "../../hooks";
+import OrderProduct from "../../components/OrderItem/OrderProduct";
+import { useOrders, useProducts } from "../../hooks";
 
 function Orders() {
   const { orders } = useOrders();
+
+  const { handleAddToCart } = useProducts();
 
   return (
     <section className="order-section">
@@ -19,8 +21,8 @@ function Orders() {
             <span>상세보기 &gt;</span>
           </div>
 
-          {item.orderDetails.map((item) => (
-            <OrderItem key={item.id} item={item} />
+          {item.orderDetails.map((product) => (
+            <OrderProduct key={product.id} product={product} onClick={handleAddToCart} />
           ))}
         </div>
       ))}
