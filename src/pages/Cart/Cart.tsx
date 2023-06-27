@@ -2,6 +2,7 @@ import React, { Fragment, useState } from "react";
 import { useCart, useCartItemHandlers } from "../../hooks";
 import { CartItem } from "../../components/CartItem";
 import { Link } from "react-router-dom";
+import { CartItems } from "../../components/CartItems";
 
 const template = (children: React.ReactNode) => <div>{children}</div>;
 
@@ -54,16 +55,7 @@ function Cart() {
             </button>
           </div>
           {cart?.items?.length > 0 && (
-            <>
-              <h3 className="cart-title">든든배송 상품({cart.items.length}개)</h3>
-              <hr className="divide-line-gray mt-10" />
-              {cart?.items?.map((item) => (
-                <Fragment key={item.id}>
-                  <CartItem item={item} handlers={cartItemHandlers} />
-                  <hr className="divide-line-thin mt-10" />
-                </Fragment>
-              ))}
-            </>
+            <CartItems items={cart.items} title={`든든배송 상품(${cart.items.length}개)`} handlers={cartItemHandlers} />
           )}
         </section>
         <section className="cart-right-section">
@@ -78,7 +70,7 @@ function Cart() {
             </div>
             <div className="flex-center mt-30 mx-10">
               <button className="primary-button flex-center">
-                <Link to="/todo">주문하기({checkedItems.length}개)</Link>
+                <Link to="/checkout">주문하기({checkedItems.length}개)</Link>
               </button>
             </div>
           </div>

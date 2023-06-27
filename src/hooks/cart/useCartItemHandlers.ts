@@ -1,4 +1,4 @@
-import { ICartItem } from "../../domain/types";
+import { ICart, ICartItem } from "../../domain/types";
 import useCart from "./useCart";
 import { useCallback } from "react";
 import { CART } from "../../domain/constants";
@@ -10,6 +10,13 @@ type TProps =
     }
   | undefined
   | null;
+
+export interface ICartItemHandlers {
+  toggleCheck(item: ICartItem): void;
+  handleDeleteItem(item: ICartItem): void;
+  handleIncrement(item: ICartItem): void;
+  handleDecrement(item: ICartItem): void;
+}
 
 const useCartItemHandlers = (props: TProps) => {
   const setError = props?.setError;
@@ -38,7 +45,7 @@ const useCartItemHandlers = (props: TProps) => {
     toggleCheck.mutate({ items: cart.items, checked: !allChecked });
   }, [toggleCheck, cart]);
 
-  const cartItemHandlers = {
+  const cartItemHandlers: ICartItemHandlers = {
     toggleCheck(item: ICartItem) {
       setError?.(null);
 
