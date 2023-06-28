@@ -1,4 +1,4 @@
-import { ICart, ICartItem } from "../../domain/types";
+import { ICartItem } from "../../domain/types";
 import useCart from "./useCart";
 import { useCallback } from "react";
 import { CART } from "../../domain/constants";

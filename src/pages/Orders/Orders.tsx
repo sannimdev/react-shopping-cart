@@ -1,6 +1,7 @@
 import React from "react";
 import OrderProduct from "../../components/OrderItem/OrderProduct";
 import { useOrders, useProducts } from "../../hooks";
+import { SectionHeader } from "../../components/SectionHeader";
 
 function Orders() {
   const { orders } = useOrders();
@@ -9,10 +10,7 @@ function Orders() {
 
   return (
     <section className="order-section">
-      <header className="flex-col-center mt-20">
-        <h2 className="order-section__title">주문 목록</h2>
-        <hr className="divide-line mt-20" />
-      </header>
+      <SectionHeader title="주문 목록" />
 
       {orders.map((item) => (
         <div key={item.id} className="order--list">
