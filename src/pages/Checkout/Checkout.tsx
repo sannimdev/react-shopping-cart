@@ -45,7 +45,7 @@ function Checkout() {
             subtitle="총 결제금액"
             label={`${estimatedPrice.toLocaleString()}원 결제하기`}
             estimatedPrice={estimatedPrice}
-            onClick={goCheckout} // TODO: 로직 구현
+            onClick={goCheckout}
           />
         </section>
       </div>
