@@ -1,4 +1,4 @@
-import { ICart, IOrder, IProduct } from "./domain";
+import { ICartItem, IOrder, IProduct } from "./domain";
 
 export interface IRequestPaging {
   page: number;
@@ -13,7 +13,7 @@ export interface IProductResponse extends IResponsePager {
 }
 
 export interface ICartResponse extends IResponsePager {
-  cart: ICart;
+  items: ICartItem[];
 }
 
 export interface IOrderResponse extends IResponsePager {

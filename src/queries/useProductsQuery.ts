@@ -5,10 +5,14 @@ export const QUERY_KEY = API_URL.PRODUCTS;
 export const FETCHING_UNIT = 12;
 
 const useProductsQuery = () => {
-  return useInfiniteQuery("products", async ({ pageParam = 0 }) => {
-    const res = await requestProducts({ page: pageParam + 1, unit: FETCHING_UNIT });
-    return res.data;
-  });
+  return useInfiniteQuery(
+    "products",
+    async ({ pageParam = 0 }) => {
+      const res = await requestProducts({ page: pageParam + 1, unit: FETCHING_UNIT });
+      return res.data;
+    },
+    { getNextPageParam: (lastPage) => lastPage.page < lastPage.endOfPage }
+  );
 };
 
 export default useProductsQuery;

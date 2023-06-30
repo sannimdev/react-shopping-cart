@@ -35,7 +35,7 @@ function analyzePages({ page, unit = DEFAULT_PAGE_UNIT, items = [] }) {
   const start = (parsedPage - 1) * parsedUnit;
   const end = start + parsedUnit;
 
-  return { parsedPage, parsedUnit, endOfPage, start, end };
+  return { parsedPage, parsedUnit, endOfPage, start, end, count: items.length };
 }
 
 export const handlers = [
@@ -63,7 +63,7 @@ export const handlers = [
     return response(
       context.delay(RESPONSE_CODE.FAILED_RESPONSE),
       context.status(200),
-      context.json({ cart: { items: productsInCart }, page: parsedPage, endOfPage })
+      context.json({ items: productsInCart, page: parsedPage, endOfPage })
     );
   }),
 
