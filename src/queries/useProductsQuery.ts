@@ -1,17 +1,14 @@
-import { useQuery } from "react-query";
+import { useInfiniteQuery } from "react-query";
 import { API_URL, requestProducts } from "../apis";
 
 export const QUERY_KEY = API_URL.PRODUCTS;
-
-const fetcher = () =>
-  requestProducts({
-    page: 1,
-  })
-    .then(({ data }) => data)
-    .catch(() => alert("불러오기 실패"));
+export const FETCHING_UNIT = 12;
 
 const useProductsQuery = () => {
-  return useQuery(QUERY_KEY, fetcher);
+  return useInfiniteQuery("products", async ({ pageParam = 0 }) => {
+    const res = await requestProducts({ page: pageParam + 1, unit: FETCHING_UNIT });
+    return res.data;
+  });
 };
 
 export default useProductsQuery;

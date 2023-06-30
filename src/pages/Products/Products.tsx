@@ -7,14 +7,14 @@ import { IProduct } from "../../domain/types";
 const template = (children: React.ReactNode) => <section className="product-container">{children}</section>;
 
 function Products() {
-  const { ref, inView } = useInView();
+  const { ref: infiniteRef, inView } = useInView();
 
-  const { status, error, products, handleAddToCart, fetchNextPage } = useProducts();
+  const { pageRef, status, error, products, handleAddToCart, fetchNextPage } = useProducts();
 
   useEffect(() => {
     if (inView) {
-      console.log("페이지 도달...");
-      fetchNextPage();
+      pageRef.current += 1;
+      fetchNextPage({ pageParam: pageRef.current });
     }
   }, [inView]);
 
@@ -33,9 +33,7 @@ function Products() {
           <ProductItem key={product.id} product={product} onAddInCart={handleAddToCart} />
         ))
       )}
-      <p style={{ backgroundColor: "red" }} ref={ref}>
-        dflkasdjflsalkdfjlkdjflksj
-      </p>
+      <hr style={{ visibility: "hidden" }} ref={infiniteRef} />
     </>
   );
 }
