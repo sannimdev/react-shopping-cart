@@ -1,13 +1,13 @@
-import { useMemo, useRef } from "react";
-import { CART } from "../../domain/constants";
-import { ICartItem } from "../../domain/types";
-import { IResponseError } from "../../domain/types/response";
-import { convertToViewError } from "../utils";
-import useCartMutations from "../../mutations/useCartMutations";
-import useCartQuery from "../../queries/useCartQuery";
+import { useMemo, useRef } from 'react';
+import { CART } from '../../domain/constants';
+import { ICartItem } from '../../domain/types';
+import { IResponseError } from '../../domain/types/response';
+import { convertToViewError } from '../utils';
+import useCartMutations from '../../mutations/useCartMutations';
+import useCartQuery from '../../queries/useCartQuery';
 
 const useCart = () => {
-  const pageRef = useRef<number>(0);
+  const pageRef = useRef(0);
 
   const { status, data, error: queryError, refetch, fetchNextPage, hasNextPage } = useCartQuery();
 

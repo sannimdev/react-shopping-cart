@@ -1,7 +1,7 @@
-import { ICartItem, IProduct } from "../domain/types";
-import { API_URL, RESPONSE_CODE } from "./constants";
-import { ICartResponse, IRequestPaging } from "../domain/types/response";
-import fetcher from "../utils/fetcher";
+import { ICartItem, IProduct } from '../domain/types';
+import { API_URL, RESPONSE_CODE } from './constants';
+import { ICartResponse, IRequestPaging } from '../domain/types/response';
+import fetcher from '../utils/fetcher';
 
 export async function requestDeleteItems(items: ICartItem[]): Promise<boolean> {
   const response = await fetcher.delete(API_URL.CART, { data: { items } });
@@ -23,7 +23,7 @@ export async function requestAddItem(product: IProduct): Promise<boolean> {
   return response.status === RESPONSE_CODE.SUCCESS_EMPTY;
 }
 
-export async function requestCartItems({ page = 1, unit = 2_999_999_9999_999 }: IRequestPaging) {
+export async function requestCartItems({ page, unit }: IRequestPaging) {
   const params = new URLSearchParams({ page: page.toString(), unit: unit.toString() });
   return fetcher.get<ICartResponse>(`${API_URL.CART}?${params.toString()}`);
 }
