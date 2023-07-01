@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
-import { useInView } from 'react-intersection-observer';
-import OrderProduct from '../../components/OrderItem/OrderProduct';
-import { useOrders, useProducts } from '../../hooks';
-import { SectionHeader } from '../../components/SectionHeader';
+import React, { useEffect } from "react";
+import { useInView } from "react-intersection-observer";
+import OrderProduct from "../../components/OrderItem/OrderProduct";
+import { useOrders, useProducts } from "../../hooks";
+import { SectionHeader } from "../../components/SectionHeader";
 
 function Orders() {
   const { ref: infiniteRef, inView } = useInView();
@@ -37,7 +37,7 @@ function Orders() {
           ))}
         </div>
       ))}
-      <hr ref={infiniteRef} style={{ visibility: 'hidden' }} />
+      <hr ref={infiniteRef} style={{ visibility: "hidden" }} />
     </section>
   );
 }

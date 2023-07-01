@@ -8,12 +8,15 @@ const useCartQuery = () => {
   return useInfiniteQuery(
     QUERY_KEY,
     async ({ pageParam = 0 }) => {
-      const res = await requestCartItems({ page: pageParam + 1, unit: FETCHING_UNIT });
+      const res = await requestCartItems({
+        page: pageParam + 1,
+        unit: FETCHING_UNIT,
+      });
       return res.data;
     },
     {
       getNextPageParam: (lastPage) => lastPage.page < lastPage.endOfPage,
-    }
+    },
   );
 };
 

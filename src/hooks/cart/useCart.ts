@@ -1,10 +1,10 @@
-import { useMemo, useRef } from 'react';
-import { CART } from '../../domain/constants';
-import { ICartItem } from '../../domain/types';
-import { IResponseError } from '../../domain/types/response';
-import { convertToViewError } from '../utils';
-import useCartMutations from '../../mutations/useCartMutations';
-import useCartQuery from '../../queries/useCartQuery';
+import { useMemo, useRef } from "react";
+import { CART } from "../../domain/constants";
+import { ICartItem } from "../../domain/types";
+import { IResponseError } from "../../domain/types/response";
+import { convertToViewError } from "../utils";
+import useCartMutations from "../../mutations/useCartMutations";
+import useCartQuery from "../../queries/useCartQuery";
 
 const useCart = () => {
   const pageRef = useRef(0);
@@ -21,7 +21,7 @@ const useCart = () => {
           return [...result, ...current.items];
         }, [] as ICartItem[]) ?? [],
     }),
-    [data]
+    [data],
   );
 
   const allChecked = useMemo(() => cart.items?.every(({ checked }) => !!checked) || false, [cart]);
@@ -31,9 +31,9 @@ const useCart = () => {
       checkedItems.reduce(
         (result, current) =>
           result + current.product.price * (current.product.quantity ?? CART.PRODUCTS.DEFAULT_INITIAL_QUANTITY),
-        0
+        0,
       ) || 0,
-    [checkedItems]
+    [checkedItems],
   );
 
   return {

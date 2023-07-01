@@ -1,4 +1,4 @@
-import { ICartItem, IOrder, IProduct } from './domain';
+import { ICartItem, IOrder, IProduct } from "./domain";
 
 export interface IRequestPaging {
   page: number;

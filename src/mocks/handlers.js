@@ -1,7 +1,7 @@
-import { rest } from 'msw';
-import db from './db';
-import { RESPONSE_CODE } from '../apis';
-import { CustomError, generateError } from './util';
+import { rest } from "msw";
+import db from "./db";
+import { RESPONSE_CODE } from "../apis";
+import { CustomError, generateError } from "./util";
 
 const { products, orders: defaultOrders, cartItems: defaultCartItems } = db;
 const sortItems = (items) => items.sort((a, b) => (b.product.createdAt || 0) - (a.product.createdAt || 0));
@@ -10,9 +10,13 @@ const orders = [...defaultOrders];
 const initializedCartItems = sortItems(
   defaultCartItems.map((item, idx) => ({
     ...item,
-    product: { ...item.product, createdAt: Date.now() + idx, updatedAt: Date.now() + idx },
+    product: {
+      ...item.product,
+      createdAt: Date.now() + idx,
+      updatedAt: Date.now() + idx,
+    },
     checked: false,
-  }))
+  })),
 );
 
 const cart = {
@@ -21,8 +25,8 @@ const cart = {
 
 /////////////////////////////////////
 
-const PAGE_KEY = 'page';
-const UNIT_KEY = 'unit';
+const PAGE_KEY = "page";
+const UNIT_KEY = "unit";
 const DEFAULT_PAGE_UNIT = 16;
 
 /////////////////////////////////////
@@ -39,44 +43,70 @@ function analyzePages({ page, unit = DEFAULT_PAGE_UNIT, items = [] }) {
 }
 
 export const handlers = [
-  rest.get('/api/products', (request, response, context) => {
+  rest.get("/api/products", (request, response, context) => {
     const page = request.url.searchParams.get(PAGE_KEY);
     const unit = request.url.searchParams.get(UNIT_KEY);
-    const { start, end, endOfPage, parsedPage } = analyzePages({ page, unit, items: products });
+    const { start, end, endOfPage, parsedPage, count } = analyzePages({
+      page,
+      unit,
+      items: products,
+    });
 
     const responseForProducts = products.slice(start, end);
 
-    return response(context.status(200), context.json({ products: responseForProducts, page: parsedPage, endOfPage }));
+    return response(
+      context.status(200),
+      context.json({
+        products: responseForProducts,
+        page: parsedPage,
+        endOfPage,
+        count,
+      }),
+    );
   }),
-  rest.get('/api/orders', (request, response, context) => {
+  rest.get("/api/orders", (request, response, context) => {
     const page = request.url.searchParams.get(PAGE_KEY);
     const unit = request.url.searchParams.get(UNIT_KEY);
-    const { start, end, endOfPage, parsedPage } = analyzePages({ page, unit, items: products });
+    const { start, end, endOfPage, parsedPage, count } = analyzePages({
+      page,
+      unit,
+      items: products,
+    });
 
     const responseForOrders = orders.slice(start, end);
 
     return response(
       context.status(200),
-      context.json({ orders: responseForOrders, page: parsedPage, unit, endOfPage })
+      context.json({
+        orders: responseForOrders,
+        page: parsedPage,
+        unit,
+        endOfPage,
+        count,
+      }),
     );
   }),
 
   /////////////////////////
-  rest.get('/api/cart', (request, response, context) => {
+  rest.get("/api/cart", (request, response, context) => {
     const page = request.url.searchParams.get(PAGE_KEY);
     const unit = request.url.searchParams.get(UNIT_KEY);
-    const { start, end, endOfPage, parsedPage } = analyzePages({ page, unit, items: cart.items });
+    const { start, end, endOfPage, parsedPage, count } = analyzePages({
+      page,
+      unit,
+      items: cart.items,
+    });
 
     const productsInCart = cart.items.slice(start, end);
 
     return response(
       context.delay(RESPONSE_CODE.FAILED_RESPONSE),
       context.status(200),
-      context.json({ items: productsInCart, page: parsedPage, endOfPage })
+      context.json({ items: productsInCart, page: parsedPage, endOfPage, count }),
     );
   }),
 
-  rest.post('/api/cart', async (request, response, context) => {
+  rest.post("/api/cart", async (request, response, context) => {
     const { data: product } = await request.json();
 
     cart.items.unshift({
@@ -93,7 +123,7 @@ export const handlers = [
     return response(context.status(RESPONSE_CODE.SUCCESS_EMPTY));
   }),
 
-  rest.delete('/api/cart', async (request, response, context) => {
+  rest.delete("/api/cart", async (request, response, context) => {
     try {
       const {
         data: { items },
@@ -104,12 +134,12 @@ export const handlers = [
     } catch (error) {
       return response(
         context.status(RESPONSE_CODE.FAILED_RESPONSE),
-        context.json(generateError('상품 삭제에 실패했습니다. 다시 시도해 주세요.'))
+        context.json(generateError("상품 삭제에 실패했습니다. 다시 시도해 주세요.")),
       );
     }
   }),
 
-  rest.patch('/api/cart/item/quantity', async (request, response, context) => {
+  rest.patch("/api/cart/item/quantity", async (request, response, context) => {
     try {
       const {
         data: { item },
@@ -125,12 +155,12 @@ export const handlers = [
     } catch (error) {
       return response(
         context.status(RESPONSE_CODE.FAILED_RESPONSE),
-        context.json(generateError('수량 조절에 실패했습니다.'))
+        context.json(generateError("수량 조절에 실패했습니다.")),
       );
     }
   }),
 
-  rest.patch('/api/cart/items/check', async (request, response, context) => {
+  rest.patch("/api/cart/items/check", async (request, response, context) => {
     try {
       const {
         data: { items, checked },
@@ -147,12 +177,12 @@ export const handlers = [
 
       return response(context.status(RESPONSE_CODE.SUCCESS_EMPTY));
     } catch (error) {
-      console.error('check patch', error);
+      console.error("check patch", error);
       return response(context.status(RESPONSE_CODE.FAILED_RESPONSE));
     }
   }),
 
-  rest.post('/api/checkout', async (request, response, context) => {
+  rest.post("/api/checkout", async (request, response, context) => {
     try {
       const resp = await request.json();
       const {
@@ -160,7 +190,7 @@ export const handlers = [
       } = resp;
 
       if (items.length === 0) {
-        throw new CustomError('구매할 물건을 선택하지 않았습니다.');
+        throw new CustomError("구매할 물건을 선택하지 않았습니다.");
       }
 
       // 주문 목록 추가하기
@@ -176,7 +206,7 @@ export const handlers = [
 
       return response(context.status(RESPONSE_CODE.SUCCESS_EMPTY));
     } catch (error) {
-      console.error('checkout error', error);
+      console.error("checkout error", error);
 
       if (error instanceof CustomError) {
         return response(context.status(RESPONSE_CODE.FAILED_RESPONSE), context.json(generateError(error.message)));

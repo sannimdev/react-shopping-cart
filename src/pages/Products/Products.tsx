@@ -31,7 +31,7 @@ function Products() {
       {template(
         products?.map((product: IProduct) => (
           <ProductItem key={product.id} product={product} onAddInCart={handleAddToCart} />
-        ))
+        )),
       )}
       <hr style={{ visibility: "hidden" }} ref={infiniteRef} />
     </>
