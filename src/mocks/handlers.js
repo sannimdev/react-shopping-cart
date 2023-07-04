@@ -55,6 +55,7 @@ export const handlers = [
     const responseForProducts = products.slice(start, end);
 
     return response(
+      context.delay(4000),
       context.status(200),
       context.json({
         products: responseForProducts,

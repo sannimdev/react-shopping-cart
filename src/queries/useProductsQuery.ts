@@ -14,7 +14,7 @@ const useProductsQuery = () => {
       });
       return res.data;
     },
-    { getNextPageParam: (lastPage) => lastPage.page < lastPage.endOfPage },
+    { getNextPageParam: (lastPage) => lastPage.page < lastPage.endOfPage, suspense: true },
   );
 };
 
