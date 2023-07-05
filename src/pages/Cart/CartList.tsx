@@ -5,7 +5,6 @@ import { CartItems } from "../../components/CartItems";
 import EstimatedPaymentSide from "../../components/EstimatedPaymentSide/EstimatedPaymentSide";
 import { SectionHeader } from "../../components/SectionHeader";
 import { useInView } from "react-intersection-observer";
-import CartTemplate from "./CartTemplate";
 
 function CartList() {
   const { ref: infiniteRef, inView } = useInView();
@@ -34,7 +33,7 @@ function CartList() {
   };
 
   return (
-    <CartTemplate>
+    <>
       {errorMessage && <div>{errorMessage}</div>}
       <SectionHeader title="장바구니" />
 
@@ -59,9 +58,15 @@ function CartList() {
             </button>
           </div>
           {cart?.items?.length > 0 && (
-            <CartItems items={cart.items} title={`든든배송 상품(${cart.items.length}개)`} handlers={cartItemHandlers} />
+            <>
+              <CartItems
+                items={cart.items}
+                title={`든든배송 상품(${cart.items.length}개)`}
+                handlers={cartItemHandlers}
+              />
+              <hr style={{ visibility: "hidden" }} ref={infiniteRef} />
+            </>
           )}
-          <hr ref={infiniteRef} />
         </section>
         <section className="cart-right-section">
           <EstimatedPaymentSide
@@ -73,7 +78,7 @@ function CartList() {
           />
         </section>
       </div>
-    </CartTemplate>
+    </>
   );
 }
 

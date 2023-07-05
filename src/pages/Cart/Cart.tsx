@@ -4,9 +4,11 @@ import CartTemplate from "./CartTemplate";
 
 function Cart() {
   return (
-    <Suspense fallback={<CartTemplate>loading..</CartTemplate>}>
-      <CartList />
-    </Suspense>
+    <CartTemplate>
+      <Suspense fallback={<div>loading..</div>}>
+        <CartList />
+      </Suspense>
+    </CartTemplate>
   );
 }
 

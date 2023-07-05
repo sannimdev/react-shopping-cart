@@ -5,15 +5,11 @@ import { CartItemsSkeleton } from "../../components/CartItemsSkeleton";
 
 function Products() {
   return (
-    <Suspense
-      fallback={
-        <ProductTemplate>
-          <CartItemsSkeleton />
-        </ProductTemplate>
-      }
-    >
-      <ProductList />
-    </Suspense>
+    <ProductTemplate>
+      <Suspense fallback={<CartItemsSkeleton />}>
+        <ProductList />
+      </Suspense>
+    </ProductTemplate>
   );
 }
 

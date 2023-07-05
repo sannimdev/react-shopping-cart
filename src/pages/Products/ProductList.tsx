@@ -3,7 +3,6 @@ import { useInView } from "react-intersection-observer";
 import { ProductItem } from "../../components/ProductItem";
 import { useProducts } from "../../hooks";
 import { IProduct } from "../../domain/types";
-import ProductTemplate from "./ProductTemplate";
 
 function ProductList() {
   const { ref: infiniteRef, inView } = useInView();
@@ -19,12 +18,10 @@ function ProductList() {
 
   return (
     <>
-      <ProductTemplate>
-        {products?.map((product: IProduct) => (
-          <ProductItem key={product.id} product={product} onAddInCart={handleAddToCart} />
-        ))}
-      </ProductTemplate>
-      <hr style={{ visibility: "hidden" }} ref={infiniteRef} />
+      {products?.map((product: IProduct) => (
+        <ProductItem key={product.id} product={product} onAddInCart={handleAddToCart} />
+      ))}
+      {products?.length && <hr style={{ visibility: "hidden" }} ref={infiniteRef} />}
     </>
   );
 }

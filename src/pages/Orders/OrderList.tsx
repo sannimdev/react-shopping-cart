@@ -37,7 +37,7 @@ function OrderList() {
           ))}
         </div>
       ))}
-      <hr ref={infiniteRef} style={{ visibility: "hidden" }} />
+      {orders?.length && <hr ref={infiniteRef} style={{ visibility: "hidden" }} />}
     </>
   );
 }
