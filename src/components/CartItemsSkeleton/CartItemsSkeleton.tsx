@@ -10,6 +10,9 @@ const SkeletonElement = () => (
       <div className="flex gap-15 mt-10">
         <div className="cart-img-blank cart-skeleton w-280 h-280"></div>
       </div>
+      <div className="flex-col-center justify-end gap-15">
+        <div className="w-280 h-44">&nbsp;</div>
+      </div>
     </div>
   </div>
 );

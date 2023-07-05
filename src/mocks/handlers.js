@@ -101,7 +101,7 @@ export const handlers = [
     const productsInCart = cart.items.slice(start, end);
 
     return response(
-      context.delay(RESPONSE_CODE.FAILED_RESPONSE),
+      context.delay(2000),
       context.status(200),
       context.json({ items: productsInCart, page: parsedPage, endOfPage, count }),
     );
