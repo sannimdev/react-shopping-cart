@@ -5,7 +5,7 @@ import OrderList from "./OrderList";
 function Orders() {
   return (
     <OrderTemplate>
-      <Suspense fallback={<div>준비 중입니다</div>}>
+      <Suspense fallback={<div>Fallback 단위 지정 다시해야 할 텐데...</div>}>
         <OrderList />
       </Suspense>
     </OrderTemplate>

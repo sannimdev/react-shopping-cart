@@ -7,7 +7,7 @@ import { IProduct } from "../../domain/types";
 function ProductList() {
   const { ref: infiniteRef, inView } = useInView();
 
-  const { pageRef, products, handleAddToCart, fetchNextPage } = useProducts();
+  const { pageRef, products, isFetching, handleAddToCart, fetchNextPage, hasNextPage } = useProducts();
 
   useEffect(() => {
     if (inView) {
@@ -18,10 +18,16 @@ function ProductList() {
 
   return (
     <>
-      {products?.map((product: IProduct) => (
-        <ProductItem key={product.id} product={product} onAddInCart={handleAddToCart} />
-      ))}
-      {products?.length && <hr style={{ visibility: "hidden" }} ref={infiniteRef} />}
+      <ul>
+        {products?.map((product: IProduct) => (
+          <li key={product.id}>
+            <ProductItem product={product} onAddInCart={handleAddToCart} />
+          </li>
+        ))}
+        {hasNextPage && products?.length && <hr style={{ visibility: "hidden" }} ref={infiniteRef} />}
+      </ul>
+      <div>{isFetching}</div>
+      {isFetching && <div>불러오는 중...</div>}
     </>
   );
 }

@@ -20,9 +20,13 @@ const SkeletonElement = () => (
 function CartItemsSkeleton({ length = 16 }: TProps) {
   return (
     <>
-      {Array.from({ length }).map((_, idx) => (
-        <SkeletonElement key={idx} />
-      ))}
+      <ul>
+        {Array.from({ length }).map((_, idx) => (
+          <li key={idx}>
+            <SkeletonElement />
+          </li>
+        ))}
+      </ul>
     </>
   );
 }
