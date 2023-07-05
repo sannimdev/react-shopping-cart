@@ -17,6 +17,7 @@ const useOrdersQuery = () => {
 
     {
       getNextPageParam: (lastPage) => lastPage.page < lastPage.endOfPage,
+      suspense: true,
     },
   );
 };
