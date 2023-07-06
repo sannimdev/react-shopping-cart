@@ -3,6 +3,7 @@ import { useInView } from "react-intersection-observer";
 import { ProductItem } from "../../components/ProductItem";
 import { useProducts } from "../../hooks";
 import { IProduct } from "../../domain/types";
+import { Spinner } from "../../components/Spinner";
 
 function ProductList() {
   const { ref: infiniteRef, inView } = useInView();
@@ -26,8 +27,7 @@ function ProductList() {
         ))}
         {hasNextPage && products?.length && <hr style={{ visibility: "hidden" }} ref={infiniteRef} />}
       </ul>
-      <div>{isFetching}</div>
-      {isFetching && <div>불러오는 중...</div>}
+      {isFetching && <Spinner />}
     </>
   );
 }

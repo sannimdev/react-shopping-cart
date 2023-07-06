@@ -2,20 +2,20 @@ import React, { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import OrderProduct from "../../components/OrderItem/OrderProduct";
 import { useOrders, useProducts } from "../../hooks";
-import { SectionHeader } from "../../components/SectionHeader";
+import { Spinner } from "../../components/Spinner";
 
 function OrderList() {
   const { ref: infiniteRef, inView } = useInView();
   const {
     pageRef,
     orders,
-    queries: { fetchNextPage, hasNextPage },
+    queries: { fetchNextPage, hasNextPage, isFetching },
   } = useOrders();
 
   const { handleAddToCart } = useProducts();
 
   useEffect(() => {
-    if (inView && hasNextPage) {
+    if (inView) {
       pageRef.current += 1;
       fetchNextPage({ pageParam: pageRef.current });
     }
@@ -23,8 +23,6 @@ function OrderList() {
 
   return (
     <>
-      <SectionHeader title="주문 목록" />
-
       {orders.map((item) => (
         <div key={item.id} className="order--list">
           <div className="order-list__header">
@@ -37,7 +35,8 @@ function OrderList() {
           ))}
         </div>
       ))}
-      {orders?.length && <hr ref={infiniteRef} style={{ visibility: "hidden" }} />}
+      {hasNextPage && orders?.length && <hr ref={infiniteRef} style={{ visibility: "hidden" }} />}
+      {isFetching && <Spinner />}
     </>
   );
 }

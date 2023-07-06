@@ -71,12 +71,13 @@ export const handlers = [
     const { start, end, endOfPage, parsedPage, count } = analyzePages({
       page,
       unit,
-      items: products,
+      items: orders,
     });
 
     const responseForOrders = orders.slice(start, end);
 
     return response(
+      context.delay(2000),
       context.status(200),
       context.json({
         orders: responseForOrders,
