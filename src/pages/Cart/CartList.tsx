@@ -1,16 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useCart, useCartItemHandlers } from "../../hooks";
 import { useNavigate } from "react-router-dom";
 import { CartItems } from "../../components/CartItems";
 import EstimatedPaymentSide from "../../components/EstimatedPaymentSide/EstimatedPaymentSide";
-import { SectionHeader } from "../../components/SectionHeader";
 import { useInView } from "react-intersection-observer";
 
 function CartList() {
   const { ref: infiniteRef, inView } = useInView();
 
   const navigate = useNavigate();
-  const [errorMessage, setError] = useState<string | null>(null);
 
   const {
     pageRef,
@@ -26,7 +24,7 @@ function CartList() {
     }
   }, [inView]);
 
-  const { toggleAllCheck, deleteCheckedItems, cartItemHandlers } = useCartItemHandlers({ setError });
+  const { toggleAllCheck, deleteCheckedItems, cartItemHandlers } = useCartItemHandlers(undefined);
 
   const handleCheckout = () => {
     navigate("/checkout");

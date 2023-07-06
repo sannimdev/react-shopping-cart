@@ -42,6 +42,7 @@ function analyzePages({ page, unit = DEFAULT_PAGE_UNIT, items = [] }) {
   return { parsedPage, parsedUnit, endOfPage, start, end, count: items.length };
 }
 
+let retriedCount = 0;
 export const handlers = [
   rest.get("/api/products", (request, response, context) => {
     const page = request.url.searchParams.get(PAGE_KEY);
@@ -54,9 +55,16 @@ export const handlers = [
 
     const responseForProducts = products.slice(start, end);
 
+    if (++retriedCount < 5) {
+      return response(
+        context.status(RESPONSE_CODE.FAILED_REQUEST),
+        context.json(generateError("테스트를 위해 내 본 오류입니다.")),
+      );
+    }
+
     return response(
-      context.delay(4000),
-      context.status(200),
+      context.delay(500),
+      context.status(RESPONSE_CODE.SUCCESS),
       context.json({
         products: responseForProducts,
         page: parsedPage,
@@ -65,6 +73,7 @@ export const handlers = [
       }),
     );
   }),
+
   rest.get("/api/orders", (request, response, context) => {
     const page = request.url.searchParams.get(PAGE_KEY);
     const unit = request.url.searchParams.get(UNIT_KEY);
@@ -78,7 +87,7 @@ export const handlers = [
 
     return response(
       context.delay(2000),
-      context.status(200),
+      context.status(RESPONSE_CODE.SUCCESS),
       context.json({
         orders: responseForOrders,
         page: parsedPage,
@@ -103,7 +112,7 @@ export const handlers = [
 
     return response(
       context.delay(2000),
-      context.status(200),
+      context.status(RESPONSE_CODE.SUCCESS),
       context.json({ items: productsInCart, page: parsedPage, endOfPage, count }),
     );
   }),
