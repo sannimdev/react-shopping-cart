@@ -17,6 +17,7 @@ const useCartQuery = () => {
     {
       getNextPageParam: (lastPage) => lastPage.page < lastPage.endOfPage,
       suspense: true,
+      useErrorBoundary: true,
     },
   );
 };

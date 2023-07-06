@@ -13,7 +13,7 @@ function UnknownError({ resetErrorBoundary, error }: TProps) {
   return (
     <div style={{ padding: "5rem" }}>
       <h1 style={{ fontSize: "5rem", textAlign: "center" }}>😱 앗!</h1>
-      <h2>{convertToViewError(error).message}</h2>
+      <h2 style={{ fontSize: "2rem", textAlign: "center" }}>{convertToViewError(error).message}</h2>
       {retry && (
         <p style={{ textAlign: "center", marginTop: "16px" }}>
           <button type="button" onClick={retry}>

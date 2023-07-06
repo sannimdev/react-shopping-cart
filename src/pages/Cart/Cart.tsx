@@ -3,16 +3,27 @@ import CartList from "./CartList";
 import CartTemplate from "./CartTemplate";
 import { Spinner } from "../../components/Spinner";
 import { ErrorBoundary } from "react-error-boundary";
+import { QueryErrorResetBoundary } from "react-query";
+import { UnknownError } from "../../components/UnknownError";
+import { IResponseError } from "../../domain/types/response";
 
 function Cart() {
   return (
     <CartTemplate>
-      {/* 장바구니 구현은 이정도까지만 하겠습니다... */}
-      <ErrorBoundary fallback={<div>오류 발생유</div>}>
-        <Suspense fallback={<Spinner />}>
-          <CartList />
-        </Suspense>
-      </ErrorBoundary>
+      <QueryErrorResetBoundary>
+        {({ reset }) => (
+          <ErrorBoundary
+            onReset={reset}
+            fallbackRender={({ resetErrorBoundary, error }) => (
+              <UnknownError resetErrorBoundary={resetErrorBoundary} error={error as IResponseError} />
+            )}
+          >
+            <Suspense fallback={<Spinner />}>
+              <CartList />
+            </Suspense>
+          </ErrorBoundary>
+        )}
+      </QueryErrorResetBoundary>
     </CartTemplate>
   );
 }
