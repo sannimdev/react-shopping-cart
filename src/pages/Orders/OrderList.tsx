@@ -9,7 +9,7 @@ function OrderList() {
   const {
     pageRef,
     orders,
-    queries: { fetchNextPage, hasNextPage, isFetching },
+    queries: { fetchNextPage, hasNextPage, isFetching, isRefetching },
   } = useOrders();
 
   const { handleAddToCart } = useProducts();
@@ -23,6 +23,7 @@ function OrderList() {
 
   return (
     <>
+      {isRefetching && <Spinner />}
       {orders.map((item) => (
         <div key={item.id} className="order--list">
           <div className="order-list__header">

@@ -60,15 +60,16 @@ export const handlers = [
 
     const responseForProducts = products.slice(start, end);
 
-    retriedCounts.products += 1;
-    if (retriedCounts.products < 5) {
-      return response(
-        context.status(RESPONSE_CODE.FAILED_REQUEST),
-        context.json(generateError("서비스 부하로 상품 조회에 실패했습니다. 다시 시도해 주세요")),
-      );
-    }
+    // retriedCounts.products += 1;
+    // if (retriedCounts.products < 5) {
+    //   return response(
+    //     context.status(RESPONSE_CODE.FAILED_REQUEST),
+    //     context.json(generateError("서비스 부하로 상품 조회에 실패했습니다. 다시 시도해 주세요")),
+    //   );
+    // }
 
     return response(
+      context.delay(500),
       context.status(RESPONSE_CODE.SUCCESS),
       context.json({
         products: responseForProducts,
@@ -90,15 +91,16 @@ export const handlers = [
 
     const responseForOrders = orders.slice(start, end);
 
-    retriedCounts.orders += 1;
-    if (retriedCounts.orders < 5) {
-      return response(
-        context.status(RESPONSE_CODE.FAILED_REQUEST),
-        context.json(generateError("일시적인 오류로 주문 목록을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요")),
-      );
-    }
+    // retriedCounts.orders += 1;
+    // if (retriedCounts.orders < 5) {
+    //   return response(
+    //     context.status(RESPONSE_CODE.FAILED_REQUEST),
+    //     context.json(generateError("일시적인 오류로 주문 목록을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요")),
+    //   );
+    // }
 
     return response(
+      context.delay(500),
       context.status(RESPONSE_CODE.SUCCESS),
       context.json({
         orders: responseForOrders,
@@ -123,15 +125,16 @@ export const handlers = [
 
     const productsInCart = cart.items.slice(start, end);
 
-    retriedCounts.cart += 1;
-    if (retriedCounts.cart < 5) {
-      return response(
-        context.status(RESPONSE_CODE.FAILED_REQUEST),
-        context.json(generateError("일시적인 장애로 장바구니 조회에 실패했습니다. 잠시 후 다시 시도해 주세요")),
-      );
-    }
+    // retriedCounts.cart += 1;
+    // if (retriedCounts.cart < 5) {
+    //   return response(
+    //     context.status(RESPONSE_CODE.FAILED_REQUEST),
+    //     context.json(generateError("일시적인 장애로 장바구니 조회에 실패했습니다. 잠시 후 다시 시도해 주세요")),
+    //   );
+    // }
 
     return response(
+      context.delay(500),
       context.status(RESPONSE_CODE.SUCCESS),
       context.json({ items: productsInCart, page: parsedPage, endOfPage, count }),
     );

@@ -2,11 +2,14 @@ import React, { useEffect, useState } from "react";
 import { SectionHeader } from "../../components/SectionHeader";
 import EstimatedPaymentSide from "../../components/EstimatedPaymentSide/EstimatedPaymentSide";
 import { CartItems } from "../../components/CartItems";
-import { useCart, useCartItemHandlers, useOrders } from "../../hooks";
+import { useCart, useCartItemHandlers } from "../../hooks";
 import { useNavigate } from "react-router-dom";
 import useCheckoutMutations from "../../mutations/useCheckoutMutations";
+import { useQueryClient } from "react-query";
+import { QUERY_KEY } from "../../queries/useOrdersQuery";
 
 function Checkout() {
+  const queryClient = useQueryClient();
   const [errorMessage, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -23,14 +26,12 @@ function Checkout() {
   const { cartItemHandlers } = useCartItemHandlers({ setError });
   const { checkoutItems } = useCheckoutMutations({ setError });
 
-  const { refetch: refetchOrders } = useOrders();
-
   const goCheckout = async () => {
     if (!confirm("구입을 진행하시겠습니까?")) {
       return;
     }
     checkoutItems.mutate(checkedItems);
-    refetchOrders();
+    await queryClient.invalidateQueries({ queryKey: QUERY_KEY });
 
     navigate("/orders");
   };

@@ -17,7 +17,7 @@ function PrimaryButton({ onClick, children, classNames = [], size = "large" }: I
   const buttonClassNames = useMemo(() => [basicClassName[size], ...classNames].join(" "), [classNames]);
 
   return (
-    <button type="button" className={buttonClassNames} onClick={() => onClick?.()}>
+    <button type="button" className={buttonClassNames} onClick={() => onClick?.()} style={{ cursor: "pointer" }}>
       {children}
     </button>
   );

@@ -5,7 +5,7 @@ import { IOrder } from "../domain/types";
 const useOrders = () => {
   const pageRef = useRef(0);
 
-  const { status, data, error, refetch, fetchNextPage, hasNextPage, isFetching } = useOrdersQuery();
+  const { status, data, error, refetch, fetchNextPage, hasNextPage, isFetching, isRefetching } = useOrdersQuery();
 
   const orders = useMemo(
     () => data?.pages?.reduce((result, current) => [...result, ...current.orders], [] as IOrder[]) ?? [],
@@ -20,7 +20,7 @@ const useOrders = () => {
     refetch,
     orders,
 
-    queries: { fetchNextPage, hasNextPage, isFetching },
+    queries: { fetchNextPage, hasNextPage, isFetching, isRefetching },
   };
 };
 

@@ -21,7 +21,7 @@ function OrderProduct({ product, onClick }: TProps) {
           </span>
         </div>
       </div>
-      <PrimaryButton classNames={["flex-center", "self-start"]} onClick={() => onClick?.(product)}>
+      <PrimaryButton size="small" classNames={["flex-center", "self-start"]} onClick={() => onClick?.(product)}>
         장바구니
       </PrimaryButton>
     </div>
