@@ -64,12 +64,11 @@ export const handlers = [
     if (retriedCounts.products < 5) {
       return response(
         context.status(RESPONSE_CODE.FAILED_REQUEST),
-        context.json(generateError("한 번 더 재시도하시면 뜰 거예요.")),
+        context.json(generateError("서비스 부하로 상품 조회에 실패했습니다. 다시 시도해 주세요")),
       );
     }
 
     return response(
-      context.delay(500),
       context.status(RESPONSE_CODE.SUCCESS),
       context.json({
         products: responseForProducts,
@@ -95,12 +94,11 @@ export const handlers = [
     if (retriedCounts.orders < 5) {
       return response(
         context.status(RESPONSE_CODE.FAILED_REQUEST),
-        context.json(generateError("주문목록 불러오기 실패")),
+        context.json(generateError("일시적인 오류로 주문 목록을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요")),
       );
     }
 
     return response(
-      context.delay(500),
       context.status(RESPONSE_CODE.SUCCESS),
       context.json({
         orders: responseForOrders,
@@ -129,12 +127,11 @@ export const handlers = [
     if (retriedCounts.cart < 5) {
       return response(
         context.status(RESPONSE_CODE.FAILED_REQUEST),
-        context.json(generateError("장바구니 1회 오류를 위한 코드에 걸려 들었습니다.")),
+        context.json(generateError("일시적인 장애로 장바구니 조회에 실패했습니다. 잠시 후 다시 시도해 주세요")),
       );
     }
 
     return response(
-      context.delay(2000),
       context.status(RESPONSE_CODE.SUCCESS),
       context.json({ items: productsInCart, page: parsedPage, endOfPage, count }),
     );

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { SectionHeader } from "../../components/SectionHeader";
 import EstimatedPaymentSide from "../../components/EstimatedPaymentSide/EstimatedPaymentSide";
 import { CartItems } from "../../components/CartItems";
-import { useCart, useCartItemHandlers } from "../../hooks";
+import { useCart, useCartItemHandlers, useOrders } from "../../hooks";
 import { useNavigate } from "react-router-dom";
 import useCheckoutMutations from "../../mutations/useCheckoutMutations";
 
@@ -16,17 +16,21 @@ function Checkout() {
   }, []);
 
   const navigate = useNavigate();
+
   const {
     values: { checkedItems, estimatedPrice },
   } = useCart();
   const { cartItemHandlers } = useCartItemHandlers({ setError });
   const { checkoutItems } = useCheckoutMutations({ setError });
 
+  const { refetch: refetchOrders } = useOrders();
+
   const goCheckout = async () => {
     if (!confirm("구입을 진행하시겠습니까?")) {
       return;
     }
     checkoutItems.mutate(checkedItems);
+    refetchOrders();
 
     navigate("/orders");
   };

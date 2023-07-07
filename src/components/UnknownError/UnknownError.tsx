@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 import { IResponseError } from "../../domain/types/response";
 import { convertToViewError } from "../../hooks/utils";
+import { PrimaryButton } from "../PrimaryButton";
 
 type TProps = {
   resetErrorBoundary?: () => void;
@@ -15,11 +16,9 @@ function UnknownError({ resetErrorBoundary, error }: TProps) {
       <h1 style={{ fontSize: "5rem", textAlign: "center" }}>😱 앗!</h1>
       <h2 style={{ fontSize: "2rem", textAlign: "center" }}>{convertToViewError(error).message}</h2>
       {retry && (
-        <p style={{ textAlign: "center", marginTop: "16px" }}>
-          <button type="button" onClick={retry}>
-            재시도
-          </button>
-        </p>
+        <div style={{ textAlign: "center", marginTop: "16px", padding: "8px" }}>
+          <PrimaryButton onClick={retry}>재시도</PrimaryButton>
+        </div>
       )}
     </div>
   );
