@@ -42,11 +42,11 @@ function analyzePages({ page, unit = DEFAULT_PAGE_UNIT, items = [] }) {
   return { parsedPage, parsedUnit, endOfPage, start, end, count: items.length };
 }
 
-let retriedCounts = {
-  products: 0,
-  cart: 0,
-  orders: 0,
-};
+// let retriedCounts = {
+//   products: 0,
+//   cart: 0,
+//   orders: 0,
+// };
 
 export const handlers = [
   rest.get("/api/products", (request, response, context) => {
@@ -69,7 +69,6 @@ export const handlers = [
     // }
 
     return response(
-      context.delay(500),
       context.status(RESPONSE_CODE.SUCCESS),
       context.json({
         products: responseForProducts,
@@ -100,7 +99,6 @@ export const handlers = [
     // }
 
     return response(
-      context.delay(500),
       context.status(RESPONSE_CODE.SUCCESS),
       context.json({
         orders: responseForOrders,
@@ -134,7 +132,6 @@ export const handlers = [
     // }
 
     return response(
-      context.delay(500),
       context.status(RESPONSE_CODE.SUCCESS),
       context.json({ items: productsInCart, page: parsedPage, endOfPage, count }),
     );
